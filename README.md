@@ -1,10 +1,19 @@
 # TOUHOU Medle
 
-[**medle.akashiya.top**](https://medle.akashiya.top/)
+榆木华佬的原网址：[**medle.akashiya.top**](https://medle.akashiya.top/)（已停服）
+
+鸣谢榆木华！
 
 曲库为东方曲的旋律猜谜游戏，每日更新~
 
 TOUHOU melody puzzle game (available in en/zh)
+
+此版本的特性：
+1. 若作答次数超过7次，无论是答错还是答对，都无法再显示答案页面。也就是说，如果没有答对，绝对不会显示答案。
+2. language.js中修改了部分项目。
+
+设想：
+下一届希望能上线到网站上，可用域名访问，可在例会前一天晚上就公布题目，供观众在会前、会中无聊时或中场休息时在自己的设备商作答，例会最后公布答案、讲解试题。
 
 ## [zh] 服务端程序
 
