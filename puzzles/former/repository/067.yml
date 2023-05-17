@@ -1,0 +1,30 @@
+tune:
+- [3+,16,-8]
+- [3+,16,-13]
+- [2+,16,-13]
+- [6,16,2]
+- [2+,8]
+- [2+,3]
+- [3+,3]
+- [6,2]
+- [1#+,4]
+- [2+,4]
+- [3+,4]
+- [6+,4]
+- [3+,4]
+tuneBeatDur: 15000/154
+tunePitchBase: F#4
+metronome: [0,4,0,4]
+
+tuneRevealBeatDur: 15000/154
+tuneRevealOffset: 0
+
+zh-Hans:
+  title: 	童祭　～ Innocent Treasures
+  author: ZUN
+  desc: 《梦违科学世纪》第1轨。
+en:
+  title: Shanghai Alice of Meiji 17
+  author: ZUN
+  desc: Track 4 from "Dolls in Pseudo Paradise".
+curator: 苗苗

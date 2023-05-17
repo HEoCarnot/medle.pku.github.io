@@ -38,7 +38,9 @@ const tuneDecos = tune.map((note) => {
 });
 const tuneAnswer = tune.map((x) => (x[0] + 6) % 7 + 1);
 
-const attemptsLimit = (N >= 10 ? 6 : 5);
+const lowerLimit = 9
+const upperLimit = 10
+const attemptsLimit = (N >= 10 ? upperLimit : lowerLimit);
 
 const SCALE = [0, 2, 4, 5, 7, 9, 11];
 
@@ -476,7 +478,7 @@ let gameStarted = false;
 let statMode = 0;
 
 const flushStat = () => {
-  let cnt = [0, 0, 0, 0, 0, 0, 0, 0];
+  let cnt = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   const getNum = (str) => {
     let x = localStorage.getItem(str);
     if(x === null)
@@ -487,19 +489,19 @@ const flushStat = () => {
   }
   for (let i = 0; i < 2; i ++) if(statMode !== i + 1) {
     cnt[0] += getNum('statictics-' + i + '-total');
-    for (let j = 1; j <= 7; j ++) 
-      cnt[j] += getNum('statictics-' + i + '-' + (j <= 6 ? j : 'fail'));
+    for (let j = 1; j <= upperLimit + 1; j ++) 
+      cnt[j] += getNum('statictics-' + i + '-' + (j <= upperLimit ? j : 'fail'));
   }
   let mxm = 0;
-  for (let i = 1; i <= 7; i ++)
+  for (let i = 1; i <= upperLimit + 1; i ++)
     mxm = Math.max(mxm, cnt[i]);
   let total = 0;
-  for (let i = 1; i <= 7; i ++) {
-    let controlId = (i > 6 ? 'fail' : String(i));
+  for (let i = 1; i <= upperLimit + 1; i ++) {
+    let controlId = (i > upperLimit ? 'fail' : String(i));
     let percent = 0;
     if (mxm != 0)
       percent = cnt[i] / mxm;
-    if (i !== 7)
+    if (i !== upperLimit + 1)
       total += i * cnt[i];
     document.getElementById('stat-progress-bar-' + controlId).style.width = String(percent * 100) + '%';
     if (percent >= 0.5) {
@@ -515,10 +517,10 @@ const flushStat = () => {
   }
   document.getElementById('stat-total-puzzles').innerHTML = cnt[0];
   document.getElementById('stat-accuracy').innerHTML = (
-    cnt[0] === 0 ? '-' : (((cnt[0] - cnt[7]) / cnt[0] * 100).toFixed(2)) + '%'
+    cnt[0] === 0 ? '-' : (((cnt[0] - cnt[upperLimit + 1]) / cnt[0] * 100).toFixed(2)) + '%'
   );
   document.getElementById('stat-average-step').innerHTML = (
-    cnt[0] === cnt[7] ? '-' : ((total / (cnt[0] - cnt[7])).toFixed(2))
+    cnt[0] === cnt[upperLimit + 1] ? '-' : ((total / (cnt[0] - cnt[upperLimit + 1])).toFixed(2))
   );
 
 };
@@ -906,7 +908,7 @@ const startGame = (savedGuesses = []) => {
   new ClipboardJS(btnShare, {
     text: () => {
       btnShare.classList.add('copied');
-      const prefix = `TOUHOU Medle ${puzzleId} ${succeeded ? attResults.length : 'X'}/${attemptsLimit}\n`;
+      const prefix = `恐怖的回忆 ${puzzleId} ${succeeded ? attResults.length : 'X'}/${attemptsLimit}\n`;
       const suffix = `https://medle.akashiya.top/` +
         (puzzleId === todayDaily ? '' : puzzleId);
       return prefix +
@@ -1125,8 +1127,8 @@ const startGame = (savedGuesses = []) => {
       tmpVisitInfo = visits;
     visitorCount.innerHTML = visits[0];
     btnShare.classList.remove('copied');
-    if (attemptsLimit == 5)
-      document.getElementById('progress-6').classList.add('hidden');
+    if (attemptsLimit == lowerLimit)
+      document.getElementById('progress-10').classList.add('hidden');
     let mxm = 0, tot = 0, total = 0;
     for (let i = 1; i <= attemptsLimit + 1; i ++)
       mxm = Math.max(mxm, visits[i]), tot += visits[i];
@@ -1203,7 +1205,7 @@ const startGame = (savedGuesses = []) => {
     updatePlayButtonText();
   };
 
-  // Keyboard support
+  // Keyboard supportalpha
   document.addEventListener('keydown', (e) => {
     if (onAdjust) {
       acceptAdjustClick();
@@ -1333,7 +1335,7 @@ const puzzleLink = (index, showDate = true) => {
   let decomposition = getPuzzleId(index);
   let id = decomposition[0];
   // let suffix = decomposition[1];
-  let date = new Date('2022-05-27');
+  let date = new Date('2022-05-15');
   const a = document.createElement('a');
   a.classList.add('puzzle-link');
   date.setDate(date.getDate() + (id - 1));

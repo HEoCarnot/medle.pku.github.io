@@ -1,0 +1,29 @@
+tune:
+  - [6, 12, -10]
+  - [7, 8, 4, -11]
+  - [1+, 5, 8, -11]
+  - [3+, 17]
+  - [3+, 3]
+  - [1+, 1]
+  - [7, 1]
+  - [2+, 1]
+  - [7, 1]
+  - [6, 1]
+  - [5, 2]
+tuneBeatDur: 15000/153
+tunePitchBase: B4
+metronome: [0, 4]
+
+tuneRevealBeatDur: 15000/153
+tuneRevealOffset: 188370
+
+zh-Hans:
+  title: 漫游旧地狱街道（旧地獄街道を行く）
+  author: Zun
+  desc: 东方地灵殿中，3面的主题曲。
+en:
+  title: baka
+  author: Zun
+  desc: bakabaka
+
+curator: 卡诺热机之梦

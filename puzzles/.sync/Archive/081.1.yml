@@ -1,0 +1,28 @@
+tune:
+  - [3, 2]
+  - [2, 2]
+  - [1,4]
+  - [5,16,-14]
+  - [6,16,-12]
+  - [5,16,-14]
+  - [6,16,-14]
+  - [2,2,14,2]
+  - [1#,10]
+  - [3,6]
+  - [6,12]
+tuneBeatDur: 15000/169
+tunePitchBase: Bb3
+metronome: [4,4,0,4]
+
+tuneRevealBeatDur: 15000/169
+tuneRevealOffset: 0
+
+zh-Hans:
+  title: 驹草盛开的万年积雪（駒草咲くパーペチュアルスノー）
+  author: ZUN
+  desc: 《东方虹龙洞》第三面的主题曲。
+en:
+  title: Illusionary White Traveller (x)
+  author: ZUN
+  desc: Stage 4 Theme from "Hidden Stars in Four Seasons". (x)
+curator: 苗苗

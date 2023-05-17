@@ -1,0 +1,83 @@
+tune:
+  - [6-,8,-6]
+  - [2,8,-6]
+  - [3,8,-6]
+  - [5,8,2]
+  - [6,2]
+  - [2+,2]
+  - [3+,4,-2]
+  - [5+,4]
+  - [7+,2]
+  - [6+,4,-2]
+  - [5+,4]
+  - [2+,2]
+  - [1+,2]
+  - [6,18,-16]
+  - [3,14,-12]
+  - [2,2]
+  - [1,2]
+  - [5-,2]
+  - [6-,14,-12]
+  - [7-,10,-8]
+  - [1#,6,6]
+
+tuneBeatDur: 15000/164
+tunePitchBase: B4
+metronome: [0,4,0,4]
+
+tuneRevealBeatDur: 15000/164
+tuneRevealOffset: 87510
+
+zh-Hans:
+  title:  不死之花 ～ Immortal Lotus
+  author: 11是谁啊
+  desc: 《东方雪莲华》六面Boss妙严宫 雪华的主题曲。
+en:
+  title:  1
+  author: 1
+  desc: 1
+curator: 香菇
+
+# tune:
+# #BAR I
+#   - [6-,8,-6]
+#   - [2,8,-6]
+#   - [3,8,-6]
+#   - [5,8,2]
+# #BAR II
+#   - [6,2] 
+#   - [2+,2]
+#   - [3+,4,-2]
+#   - [5+,2]
+#   - [7+,2]
+#   - [6+,4,-2]
+#   - [5+,2]
+#   #BAR III (THE HIGH 6 BELONGS TO BAR II INEVITABLY)
+#   - [2,2]
+#   - [1,2]
+#   - [6,18,-16]
+#   - [3,14,-12]
+#   - [2,2]
+#   - [1,2]
+#   - [5-,2]
+#   #BAR IV
+#   - [6-,14,-12]
+#   - [7-,10,-8]
+#   - [1#,6,-4]
+
+# tuneBeatDur: 15000/164
+# tunePitchBase: B5
+# metronome: [0,4,0,4]
+
+# tuneRevealBeatDur: 15000/164
+# tuneRevealOffset: 0
+
+# zh-Hans:
+#   title:  不死之花 ～ Immortal Lotus
+#   author: 11是谁啊
+#   desc: 《东方雪莲华》六面Boss妙严宫 雪华的主题曲。
+# en:
+#   title:  1
+#   author: 1
+#   desc: 1
+# curator: 香菇

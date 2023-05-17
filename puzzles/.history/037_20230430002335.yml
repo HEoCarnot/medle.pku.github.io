@@ -1,0 +1,29 @@
+tune:
+  - [1, 3]
+  - [6, 4, 4, -5]
+  - [5, 4,-2]
+  - [1+,1]
+  - [7, 3]
+  - [3, 2]
+  - [5, 2]
+  - [6, 8]
+  - [7, 2]
+  - [1+,2]
+  - [2+,4]
+  - [3+,8]
+tuneBeatDur: 15000/164 #BPM没算过
+tunePitchBase: A4
+metronome: [0,4,0,4]
+
+tuneRevealBeatDur: 15000/169
+tuneRevealOffset: 0
+
+zh-Hans:
+  title: 回忆京都
+  author: ZUN
+  desc: 《东方文花帖》的第三首摄影用曲。
+en:
+  title: Retrospective Kyoto
+  author: ZUN
+  desc: The third BGM for photographing in "Shoot the Bullet".
+curator: 苗苗

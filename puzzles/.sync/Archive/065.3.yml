@@ -1,0 +1,26 @@
+tune:
+- [6,16,-14]
+- [5,16,-13]
+- [6,16,-13]
+- [7,16,-14]
+- [1+,16,-13]
+- [7,3]
+- [6,4]
+- [5,1]
+- [6,1]
+tuneBeatDur: 15000/155
+tunePitchBase: A4
+metronome: [-2,4,0,4]
+
+tuneRevealBeatDur: 15000/155
+tuneRevealOffset: 0
+
+zh-Hans:
+  title: Crystallize Silver（クリスタライズシルバー）
+  author: ZUN
+  desc: 《东方妖妖梦》1面BOSS蕾蒂·霍瓦特洛克的主题曲
+en:
+  title: Shanghai Alice of Meiji 17
+  author: ZUN
+  desc: Track 4 from "Dolls in Pseudo Paradise".
+curator: 苗苗

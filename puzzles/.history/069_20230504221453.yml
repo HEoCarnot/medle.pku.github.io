@@ -1,0 +1,29 @@
+tune:
+  - [3, 2]
+  - [5, 2]
+  - [6, 6]
+  - [5, 6]
+  - [4, 4]
+  - [5, 4]
+  - [1+, 4]
+  - [7, 4]
+  - [5, 4]
+  - [3, 28]
+
+tuneBeatDur: 15000/178
+tunePitchBase: G#4
+metronome: [0, 4, 0, 4]
+
+tuneRevealBeatDur: 15000/178
+tuneRevealOffset: 15000/167*128
+
+zh-Hans:
+  title: Last Remote（  ラストリモート）
+  author: Zun
+  desc: 	东方地灵殿	Extra面主题曲。
+en:
+  title: baka
+  author: Zun
+  desc: bakabaka
+
+curator: HEoCarnot

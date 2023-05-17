@@ -1,0 +1,33 @@
+tune:
+  - [6, 2]
+  - [6, 2]
+  - [6, 4]
+  - [3, 4]
+  - [5, 4]
+  - [6, 4]
+  - [3, 8]
+  - [2, 2]
+  - [3, 2]
+  - [2, 2]
+  - [1, 2]
+  - [6-, 4]
+  - [5-, 4]
+  - [6-, 16]
+
+tuneBeatDur: 15000/151
+tunePitchBase: C5
+metronome: [-4, 4, 0, 4]
+
+tuneRevealBeatDur: 15000/178
+tuneRevealOffset: 15000/167*128
+
+zh-Hans:
+  title: 三妖精SAY YA!!!
+  author: 森羅万象
+  desc: 	エイセイパレード 第6轨。
+en:
+  title: baka
+  author: Zun
+  desc: bakabaka
+
+curator: 卡诺热机之梦

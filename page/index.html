@@ -4,14 +4,14 @@
 <head>
   <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
   <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' />
-  <title>TOUHOU Medle #<%= it.id %></title>
+  <title>恐怖的回忆 #<%= it.id %></title>
   <link rel='stylesheet' href='/static/index.css?t=<%= it.currentTime %>'>
 </head>
 
 <body>
 
   <div id='container'>
-    <div id='page-title'>TOUHOU Medle #<%= it.id %></div>
+    <div id='page-title'>恐怖的回忆 #<%= it.id %></div>
     <div id='icon-btns-container'>
       <div id='icon-btn-help'>?</div>
       <!-- Useless icons deleted, svg used here -->
@@ -212,6 +212,41 @@
             
           </div>
           <div class='progress-outer-count' id='stat-progress-outer-count-6'></div>
+        </div>
+      </div>
+      <div class='progress' id='stat-progress-7'>
+        <div class='progress-bar-tag' data-t='step-7'></div>
+        <div class='progress-bar-container'>
+          <div class='progress-bar' id='stat-progress-bar-7'>
+            
+          </div>
+          <div class='progress-outer-count' id='stat-progress-outer-count-7'></div>
+        </div>
+      </div>
+      <div class='progress' id='stat-progress-8'>
+        <div class='progress-bar-tag' data-t='step-8'></div>
+        <div class='progress-bar-container'>
+          <div class='progress-bar' id='stat-progress-bar-8'>
+            
+          </div>
+          <div class='progress-outer-count' id='stat-progress-outer-count-8'></div>
+        </div>
+      </div>
+      <div class='progress' id='stat-progress-9'>
+        <div class='progress-bar-tag' data-t='step-9'></div>
+        <div class='progress-bar-container'>
+          <div class='progress-bar' id='stat-progress-bar-9'>
+
+          </div>
+          <div class='progress-outer-count' id='stat-progress-outer-count-9'></div>
+        </div>
+      </div>
+      <div class='progress' id='stat-progress-10'>
+        <div class='progress-bar-tag' data-t='step-10'></div>
+        <div class='progress-bar-container'>
+          <div class='progress-bar' id='stat-progress-bar-10'>
+          </div>
+          <div class='progress-outer-count' id='stat-progress-outer-count-10'></div>
         </div>
       </div>
       <div class='progress' id='stat-progress-fail'>
@@ -432,7 +467,7 @@
       <div class='bottom-shadow'></div>
     </div>
     <div class='modal hidden' id='modal-finish'>
-      <p class='title'>TOUHOU Medle <%= it.id %></p>
+      <p class='title'>恐怖的回忆 <%= it.id %></p>
       <p id='reveal-title'><span style='margin-right: 9px;' class='iconfont'>&#x1f3b5;</span><strong
           data-t='=title'></strong></p>
       <p id='reveal-author'><span style='margin-right: 9px;' class='iconfont'>&#xf56b;</span><span data-t='=author'></p>
@@ -531,9 +566,45 @@
         <div class='progress-bar-tag' data-t='step-6'></div>
         <div class='progress-bar-container'>
           <div class='progress-bar' id='progress-bar-6'>
-            
+          
           </div>
           <div class='progress-outer-count' id='progress-outer-count-6'></div>
+        </div>
+      </div>
+      <div class='progress' id='progress-7'>
+        <div class='progress-bar-tag' data-t='step-7'></div>
+        <div class='progress-bar-container'>
+          <div class='progress-bar' id='progress-bar-7'>
+          
+          </div>
+          <div class='progress-outer-count' id='progress-outer-count-7'></div>
+        </div>
+      </div>
+      <div class='progress' id='progress-8'>
+        <div class='progress-bar-tag' data-t='step-8'></div>
+        <div class='progress-bar-container'>
+          <div class='progress-bar' id='progress-bar-8'>
+          
+          </div>
+          <div class='progress-outer-count' id='progress-outer-count-8'></div>
+        </div>
+      </div>
+      <div class='progress' id='progress-9'>
+        <div class='progress-bar-tag' data-t='step-9'></div>
+        <div class='progress-bar-container'>
+          <div class='progress-bar' id='progress-bar-9'>
+          
+          </div>
+          <div class='progress-outer-count' id='progress-outer-count-9'></div>
+        </div>
+      </div>
+      <div class='progress' id='progress-10'>
+        <div class='progress-bar-tag' data-t='step-10'></div>
+        <div class='progress-bar-container'>
+          <div class='progress-bar' id='progress-bar-10'>
+          
+          </div>
+          <div class='progress-outer-count' id='progress-outer-count-10'></div>
         </div>
       </div>
       <div class='progress' id='progress-fail'>
@@ -639,7 +710,7 @@
       </div>
       <br>
       <div style='color: #999'>
-        <span>&copy; Medle 2022</span><br>
+        <span>&copy; Medle 2023</span><br>
         <span id='repo-notes'><a href='https://github.com/CrMomi91/medle'><span data-t='opt-source'></span></a><span
             data-t='opt-dist'></span></span><br>
         <span data-t='server'></span>&nbsp;<%= it.serverTime %>

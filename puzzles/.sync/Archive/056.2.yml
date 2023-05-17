@@ -1,0 +1,33 @@
+tune:
+  - [1++,12,-10]
+  - [2,12,-10]
+  - [7,12,-10]
+  - [1,12,-10]
+  - [6,16]
+
+  - [1,2]
+  - [3b,2]
+  - [5b,2]
+  - [7,2]
+  - [2#+, 2]
+  - [3+ ,2]
+  - [7, 2]
+  - [6, 2]
+  - [5#, 1,1,-1.5]
+  - [6, 1,15]
+tuneBeatDur: 15000/142
+tunePitchBase: B4
+metronome: [0,4,0,3]
+
+tuneRevealBeatDur: 15000/142
+tuneRevealOffset: 0
+
+zh-Hans:
+  title: 明治十七年的上海爱丽丝（明治十七年の上海アリス）
+  author: ZUN
+  desc: 《东方红魔乡》第三面BOSS红美铃的主题曲。
+en:
+  title: Shanghai Alice of Meiji 17
+  author: ZUN
+  desc: Theme for Hong Meirin, Stage 3 Boss of "The Embodiment of Scarlet Devil".
+curator: 苗苗

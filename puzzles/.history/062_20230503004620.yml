@@ -1,0 +1,34 @@
+tune:
+  - [1+, 12, -10]
+  - [2, 12, -10]
+  - [7, 12, -10]
+  - [1, 12, -10]
+  - [6, 16]
+  - [1, 2]
+  - [2, 2]
+  - [4#, 2]
+  - [7, 2]
+  - [2#+, 2]
+  - [3+, 2]
+  - [7, 2]
+  - [6, 2]
+  - [5#, 6]
+
+
+tuneBeatDur: 15000/110
+tunePitchBase: D5
+metronome: [-2, 4, 0, 3]
+
+tuneRevealBeatDur: 15000/187
+tuneRevealOffset: 15000/167*128
+
+zh-Hans:
+  title: 明治十七年的上海爱丽丝（明治十七年の上海アリス）
+  author: Zun
+  desc: 	蓬莱人形 第4轨（原曲为东方红魔乡3面BOSS红美铃的主题曲）
+en:
+  title: baka
+  author: Zun
+  desc: bakabaka
+
+curator: HEoCarnot

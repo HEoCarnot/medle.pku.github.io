@@ -1,0 +1,27 @@
+tune:
+  - [3,   4]
+  - [6,   4]
+  - [7,   3] 
+  - [1+,  3]
+  - [3+,  2]
+  - [2+, 14, -10]
+  - [1++,  7,   9,   8,  -20]
+  - [7,  16,   6,   4]
+  - [6,   2]
+  - [3+,  10]
+tuneBeatDur: 15000/169
+tunePitchBase: A4
+metronome: [0,4,0,4]
+
+tuneRevealBeatDur: 15000/169
+tuneRevealOffset: 0
+
+zh-Hans:
+  title: 幻想的白色旅人（幻想のホワイトトラベラー）
+  author: ZUN
+  desc: 《东方天空璋》第四面的主题曲。
+en:
+  title: Illusionary White Traveller
+  author: ZUN
+  desc: Stage 4 Theme from "Hidden Stars in Four Seasons".
+curator: 苗苗

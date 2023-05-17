@@ -1,0 +1,31 @@
+tune:
+  - [3, 4]
+  - [5, 4]
+  - [6, 4]
+  - [5, 2]
+  - [6, 4]
+  - [7, 2]
+  - [1+, 2]
+  - [2+, 2]
+  - [3+, 4]
+  - [2+, 4]
+  - [7, 2]
+  - [6, 4]
+
+tuneBeatDur: 15000/167
+tunePitchBase: G#5
+metronome: [0, 4]
+
+tuneRevealBeatDur: 15000/167
+tuneRevealOffset: 15000/167*128
+
+zh-Hans:
+  title: 冻结的永远之都（凍り付いた永遠の都）
+  author: Zun
+  desc: 东方绀珠传中，4面的主题曲。
+en:
+  title: baka
+  author: Zun
+  desc: bakabaka
+
+curator: HEoCarnot
