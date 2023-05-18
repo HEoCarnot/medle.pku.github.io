@@ -1,6 +1,13 @@
 .vscode/launch.json
 .vscode/sftp.json
-.gitignore
-node_modules/
-scratch/
+# 忽略搭建nodejs过程中产生的两个文件夹
+/node_modules/
+/scratch/
+# 忽略本地历史
 .history/
+# 忽略resilio sync备份
+.sync/
+# 隐藏试题
+/puzzles/*.yml
+/puzzles/reveal/*.mp3
+/puzzles/reveal/*.wav
