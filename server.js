@@ -394,9 +394,9 @@ const handler = async (req, res) => {
   respond_request(resp, res);
 };
 
-const port = process.env.PORT;
+const port = process.env.PORT || 2222;
 // const port = 2222;
-// log(`http://localhost:${port}/`);
+log(`http://localhost:${port}/`);
 
 const server = http.createServer(handler)
 
