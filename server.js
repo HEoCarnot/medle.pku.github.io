@@ -44,6 +44,7 @@ const increaseVisitData = (puzzleId, index) => {
   let data = database[puzzleId];
   ++ data[index];
   localStorage.setItem(puzzleId, JSON.stringify(data));
+  log(database)
   return JSON.stringify(data);
 }
 
@@ -119,7 +120,7 @@ const debug = false;
 const indexHtmlContents = new TextDecoder().decode(fs.readFileSync('page/index.html'));
 const indexTemplate = etaCompile(indexHtmlContents);
 
-const epoch = new Date('2022-05-26T16:00:00Z');
+const epoch = new Date('2023-10-14T16:00:00Z');
 const todaysPuzzleIndex = () => Math.ceil((new Date() - epoch) / 86400000);
 const todaysPuzzle = () => todaysPuzzleIndex().toString().padStart(3, '0');
 
@@ -149,6 +150,7 @@ const midiPitch = (s) => {
     oct * 12 +
     acci;
 };
+
 const bend = (s) => {
   const i = s.indexOf('/');
   if (i === -1) return 1;

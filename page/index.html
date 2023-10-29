@@ -4,14 +4,15 @@
 <head>
   <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
   <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' />
-  <title>恐怖的回忆 #<%= it.id %></title>
-  <link rel='stylesheet' href='/static/index.css?t=<%= it.currentTime %>'>
+  <title>恐怖的回忆 PH #{{ it.id }}</title>
+  <link rel="stylesheet" href="/medle/static/index.css?t={{ it.currentTime }}">
+  <link rel="icon" href="/medle/favicon.ico">
 </head>
 
 <body>
 
   <div id='container'>
-    <div id='page-title'>恐怖的回忆 #<%= it.id %></div>
+    <div id='page-title'>恐怖的回忆 PH #{{ it.id }}</div>
     <div id='icon-btns-container'>
       <div id='icon-btn-help'>?</div>
       <!-- Useless icons deleted, svg used here -->
@@ -19,9 +20,9 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" style="margin: 6px" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M32 32C49.67 32 64 46.33 64 64V400C64 408.8 71.16 416 80 416H480C497.7 416 512 430.3 512 448C512 465.7 497.7 480 480 480H80C35.82 480 0 444.2 0 400V64C0 46.33 14.33 32 32 32zM128 128C128 110.3 142.3 96 160 96H352C369.7 96 384 110.3 384 128C384 145.7 369.7 160 352 160H160C142.3 160 128 145.7 128 128zM288 192C305.7 192 320 206.3 320 224C320 241.7 305.7 256 288 256H160C142.3 256 128 241.7 128 224C128 206.3 142.3 192 160 192H288zM416 288C433.7 288 448 302.3 448 320C448 337.7 433.7 352 416 352H160C142.3 352 128 337.7 128 320C128 302.3 142.3 288 160 288H416z"/></svg>
       </div>
       <div id='icon-btn-options' class='iconfont'>&#xf013;</div>
-      <% if (it.isDaily) { %>
-      <div id='icon-btn-archive' class='iconfont'>&#x1f4c6;</div>
-      <% } %>
+      {% if it.isDaily %}
+        <div id='icon-btn-archive' class='iconfont'>&#x1f4c6;</div>
+      {% endif %}
     </div>
     <div id='list-container'>
     </div>
@@ -214,41 +215,6 @@
           <div class='progress-outer-count' id='stat-progress-outer-count-6'></div>
         </div>
       </div>
-      <div class='progress' id='stat-progress-7'>
-        <div class='progress-bar-tag' data-t='step-7'></div>
-        <div class='progress-bar-container'>
-          <div class='progress-bar' id='stat-progress-bar-7'>
-            
-          </div>
-          <div class='progress-outer-count' id='stat-progress-outer-count-7'></div>
-        </div>
-      </div>
-      <div class='progress' id='stat-progress-8'>
-        <div class='progress-bar-tag' data-t='step-8'></div>
-        <div class='progress-bar-container'>
-          <div class='progress-bar' id='stat-progress-bar-8'>
-            
-          </div>
-          <div class='progress-outer-count' id='stat-progress-outer-count-8'></div>
-        </div>
-      </div>
-      <div class='progress' id='stat-progress-9'>
-        <div class='progress-bar-tag' data-t='step-9'></div>
-        <div class='progress-bar-container'>
-          <div class='progress-bar' id='stat-progress-bar-9'>
-
-          </div>
-          <div class='progress-outer-count' id='stat-progress-outer-count-9'></div>
-        </div>
-      </div>
-      <div class='progress' id='stat-progress-10'>
-        <div class='progress-bar-tag' data-t='step-10'></div>
-        <div class='progress-bar-container'>
-          <div class='progress-bar' id='stat-progress-bar-10'>
-          </div>
-          <div class='progress-outer-count' id='stat-progress-outer-count-10'></div>
-        </div>
-      </div>
       <div class='progress' id='stat-progress-fail'>
         <div class='progress-bar-tag' data-t='fail'></div>
         <div class='progress-bar-container'>
@@ -283,7 +249,6 @@
       <p data-t='rule-03'></p>
       <p data-t='rule-04'></p>
       <p data-t='rule-05'></p>
-      <p data-t='rule-06'></p>
       <div class='options-btns-list'>
         <span>✨ <span data-t='opt-high-con'></span></span>
         <div id='btn-high-con-alt' class='small-btn'></div>
@@ -470,7 +435,7 @@
       <div class='bottom-shadow'></div>
     </div>
     <div class='modal hidden' id='modal-finish'>
-      <p class='title'>恐怖的回忆 <%= it.id %></p>
+      <p class='title'>恐怖的回忆 PH {{ it.id }}</p>
       <p id='reveal-title'><span style='margin-right: 9px;' class='iconfont'>&#x1f3b5;</span><strong
           data-t='=title'></strong></p>
       <p id='reveal-author'><span style='margin-right: 9px;' class='iconfont'>&#xf56b;</span><span data-t='=author'></p>
@@ -498,22 +463,26 @@
         </div>
       </div>
       <p id='reveal-desc' data-t='=desc'></p>
-      <% if (it['zh-Hans'].image) { %>
-      <img src='/reveal/<%= it.id %>.jpg' data-t='=image'>
-      <% } %>
+      {% if it['zh-Hans'].image %}
+        <img src='/medle/reveal/{{ it.id }}.jpg' data-t='=image'>
+      {% endif %}
       <div id='btn-share'>
         <span id='btn-share-text-share'><span class='iconfont' style='visibility: hidden'>&#x2714;</span><span
             data-t='btn-share'></span><span class='iconfont' style='visibility: hidden'>&#x2714;</span></span>
         <span id='btn-share-text-shared'><span class='iconfont'>&#x2714;</span> <span data-t='btn-shared'></span></span>
       </div>
-      <p style='color: #999'><span class='iconfont'>&#x266a; </span><span
-          data-t='curator<% if (it.isDaily) { %>-today<% } %>'></span><span
-          style='margin: 0 8px'>|</span><%= it.curator %></p>
-      <% if (it.isDaily) { %>
+      <p style='color: #999'>
+        <span class='iconfont'>&#x266a;</span>
+        <span data-t='curator{% if it.isDaily %}-today{% endif %}'></span>
+        <span style='margin: 0 8px'>|</span>
+        {{ it.curator }}
+      </p>
+      
+      {% if it.isDaily %}
       <div id='next-puzzle-container' class='hidden'>
         <p style='color: #999' data-t='next-puzzle'></p>
       </div>
-      <% } %>
+      {% endif %}
       <p style='color: #999'><span class='iconfont'>&#128064; </span>
         <span id='total-visitors'>-</span>&nbsp;<span data-t='visitors'></span>
       </p>
@@ -574,42 +543,6 @@
           <div class='progress-outer-count' id='progress-outer-count-6'></div>
         </div>
       </div>
-      <div class='progress' id='progress-7'>
-        <div class='progress-bar-tag' data-t='step-7'></div>
-        <div class='progress-bar-container'>
-          <div class='progress-bar' id='progress-bar-7'>
-          
-          </div>
-          <div class='progress-outer-count' id='progress-outer-count-7'></div>
-        </div>
-      </div>
-      <div class='progress' id='progress-8'>
-        <div class='progress-bar-tag' data-t='step-8'></div>
-        <div class='progress-bar-container'>
-          <div class='progress-bar' id='progress-bar-8'>
-          
-          </div>
-          <div class='progress-outer-count' id='progress-outer-count-8'></div>
-        </div>
-      </div>
-      <div class='progress' id='progress-9'>
-        <div class='progress-bar-tag' data-t='step-9'></div>
-        <div class='progress-bar-container'>
-          <div class='progress-bar' id='progress-bar-9'>
-          
-          </div>
-          <div class='progress-outer-count' id='progress-outer-count-9'></div>
-        </div>
-      </div>
-      <div class='progress' id='progress-10'>
-        <div class='progress-bar-tag' data-t='step-10'></div>
-        <div class='progress-bar-container'>
-          <div class='progress-bar' id='progress-bar-10'>
-          
-          </div>
-          <div class='progress-outer-count' id='progress-outer-count-10'></div>
-        </div>
-      </div>
       <div class='progress' id='progress-fail'>
         <div class='progress-bar-tag' data-t='fail'></div>
         <div class='progress-bar-container'>
@@ -631,9 +564,9 @@
         <span data-t='average-steps'></span>
         <span style='float: right;' id='average-step'></span>
       </p>
-      <% if (it.isDaily) { %>
+      {% if it.isDaily %}
       <p style='color: #999' data-t='daily-update'></p>
-      <% } %>
+      {% endif %}
       <div class='bottom-shadow'></div>
     </div>
     <div class='modal hidden' id='modal-archive'>
@@ -716,51 +649,49 @@
         <span>&copy; Medle 2023</span><br>
         <span id='repo-notes'><a href='https://github.com/CrMomi91/medle'><span data-t='opt-source'></span></a><span
             data-t='opt-dist'></span></span><br>
-        <span data-t='server'></span>&nbsp;<%= it.serverTime %>
+        <span data-t='server'></span>&nbsp;{{ it.serverTime }}
       </div>
       <div class='bottom-shadow'></div>
     </div>
-    <% if (it.guideToToday) { %>
+    {% if it.guideToToday %}
     <div class='modal hidden' id='modal-guide-today'>
       <p class='title'>📜</p>
-      <p><span data-t='guide-today-1-pfx'></span><strong>#<%= it.id %></strong><span data-t='guide-today-1-sfx'></span>
-      </p>
-      <p><span data-t='guide-today-2-pfx'></span><strong>#<%= it.todayDaily %></strong><span
-          data-t='guide-today-2-sfx'></span></p>
+      <p><span data-t='guide-today-1-pfx'></span><strong>#{{ it.id }}</strong><span data-t='guide-today-1-sfx'></span></p>
+      <p><span data-t='guide-today-2-pfx'></span><strong>#{{ it.todayDaily }}</strong><span data-t='guide-today-2-sfx'></span></p>
       <div id='guide-today-links'></div>
       <p style='color: #999' data-t='daily-update'></p>
     </div>
-    <% } %>
+    {% endif %}
   </div>
   <div id='modal-bg' class='hidden'></div>
 
   <style>
-    <%~it.acciStyles %>
+    {{ it.acciStyles | safe }}
   </style>
-
-<script src='/static/howler.core.min.js?t=<%= it.currentTime %>'></script>
-<script src='/static/clipboard.min.js?t=<%= it.currentTime %>'></script>
-<script src='/static/languages.js?t=<%= it.currentTime %>'></script>
-<script>
-const puzzleId = <%~ JSON.stringify(it.id) %>;
-const encodedTune = '<%~ it.tune %>';
-const tuneBeatDur = <%= it.tuneBeatDur %>;
-const tunePitchBase = <%= it.tunePitchBase %>;
-const tunePitchBend = <%= it.tunePitchBend %>;
-const tuneNoteBase = '<%= it.tuneNoteBase %>';
-const metronome = <%= JSON.stringify(it.metronome) %>;
-const tuneRevealBeatDur = <%= it.tuneRevealBeatDur %>;
-const tuneRevealOffset = <%= it.tuneRevealOffset %>;
-const isDaily = <%= it.isDaily %>;
-const guideToToday = <%= it.guideToToday %>;
-const todayDaily = <%~ JSON.stringify(it.todayDaily) %>;
-
-const availablePuzzleIds = <%~ JSON.stringify(it.availablePuzzleIds) %>;
-const specialPuzzleIds = <%~ JSON.stringify(it.specialPuzzleIds) %>;
-
-const i18nVars = '<%~ (it.i18nVars) %>';
-</script>
-<script src='/static/index.js?t=<%= it.currentTime %>'></script>
+  
+  <script src='/medle/static/howler.core.min.js?t={{ it.currentTime }}'></script>
+  <script src='/medle/static/clipboard.min.js?t={{ it.currentTime }}'></script>
+  <script src='/medle/static/languages.js?t={{ it.currentTime }}'></script>
+  <script>
+  const puzzleId = {{ it.id | tojson | safe }};
+  const encodedTune = {{ it.tune | tojson | safe }};
+  const tuneBeatDur = {{ it.tuneBeatDur }};
+  const tunePitchBase = {{ it.tunePitchBase }};
+  const tunePitchBend = {{ it.tunePitchBend }};
+  const tuneNoteBase = '{{ it.tuneNoteBase }}';
+  const metronome = {{ it.metronome | tojson | safe }};
+  const tuneRevealBeatDur = {{ it.tuneRevealBeatDur }};
+  const tuneRevealOffset = {{ it.tuneRevealOffset }};
+  const isDaily = {{ it.isDaily }};
+  const guideToToday = {{ it.guideToToday }};
+  const todayDaily = {{ it.todayDaily | tojson | safe }};
+  
+  const availablePuzzleIds = {{ it.availablePuzzleIds | tojson | safe }};
+  const specialPuzzleIds = {{ it.specialPuzzleIds | tojson | safe }};
+  
+  const i18nVars = {{ it.i18nVars | tojson | safe }};
+  </script>
+  <script src='/medle/static/index.js?t={{ it.currentTime }}'></script>
 
 </body>
 

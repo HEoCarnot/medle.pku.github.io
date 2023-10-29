@@ -36,10 +36,11 @@ const tuneDecos = tune.map((note) => {
   }
   return r;
 });
+//混淆
 const tuneAnswer = tune.map((x) => (x[0] + 6) % 7 + 1);
 
-const lowerLimit = 9
-const upperLimit = 10
+const lowerLimit = 5
+const upperLimit = 6
 const attemptsLimit = (N >= 10 ? upperLimit : lowerLimit);
 
 const SCALE = [0, 2, 4, 5, 7, 9, 11];
@@ -238,7 +239,7 @@ const sendAnalytics = async (contents) => {
   const form = new FormData();
   form.append('puzzle', puzzleId);
   form.append('t', contents);
-  let req = await fetch('/analytics', {
+  let req = await fetch('/medle/analytics', {
     method: 'POST',
     body: form
   });
@@ -248,9 +249,9 @@ const sendAnalytics = async (contents) => {
 
 const audios = {};
 const paths = [
-  ['/static/samples/pop.wav'],
-  ['/static/samples/beat.wav'],
-  ['/static/samples/strongBeat.wav']
+  ['/medle/static/samples/pop.wav'],
+  ['/medle/static/samples/beat.wav'],
+  ['/medle/static/samples/strongBeat.wav']
 ];
 
 const notesReachable = {};
@@ -267,18 +268,18 @@ for (const a of octaves)
 for (let i = -12; i <= 24; i++)
   if (notesReachable[i])
     paths.push([
-      `/static/samples/pf-${tunePitchBase + i}.ogg`,
-      `/static/samples/pf-${tunePitchBase + i}.mp3`,
+      `/medle/static/samples/pf-${tunePitchBase + i}.ogg`,
+      `/medle/static/samples/pf-${tunePitchBase + i}.mp3`,
     ]);
 
 // Music offset adjust
 paths.push([
-  `/static/samples/pf-72.ogg`,
-  `/static/samples/pf-72.mp3`,
+  `/medle/static/samples/pf-72.ogg`,
+  `/medle/static/samples/pf-72.mp3`,
 ]);
 paths.push([
-  `/static/samples/pf-60.ogg`,
-  `/static/samples/pf-60.mp3`,
+  `/medle/static/samples/pf-60.ogg`,
+  `/medle/static/samples/pf-60.mp3`,
 ]);
 
 const preloadSounds = (callback) => {
@@ -478,7 +479,7 @@ let gameStarted = false;
 let statMode = 0;
 
 const flushStat = () => {
-  let cnt = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  let cnt = [0, 0, 0, 0, 0, 0, 0, 0];
   const getNum = (str) => {
     let x = localStorage.getItem(str);
     if(x === null)
@@ -908,8 +909,8 @@ const startGame = (savedGuesses = []) => {
   new ClipboardJS(btnShare, {
     text: () => {
       btnShare.classList.add('copied');
-      const prefix = `恐怖的回忆 ${puzzleId} ${succeeded ? attResults.length : 'X'}/${attemptsLimit}\n`;
-      const suffix = `https://medle.akashiya.top/` +
+      const prefix = `恐怖的回忆 PH ${puzzleId} ${succeeded ? attResults.length : 'X'}/${attemptsLimit}\n`;
+      const suffix = `/medle/` +
         (puzzleId === todayDaily ? '' : puzzleId);
       return prefix +
         attResults.map((result) => result.map((r) => {
@@ -1128,7 +1129,7 @@ const startGame = (savedGuesses = []) => {
     visitorCount.innerHTML = visits[0];
     btnShare.classList.remove('copied');
     if (attemptsLimit == lowerLimit)
-      document.getElementById('progress-10').classList.add('hidden');
+      document.getElementById('progress-6').classList.add('hidden');
     let mxm = 0, tot = 0, total = 0;
     for (let i = 1; i <= attemptsLimit + 1; i ++)
       mxm = Math.max(mxm, visits[i]), tot += visits[i];
@@ -1164,7 +1165,7 @@ const startGame = (savedGuesses = []) => {
     if (!answerAudioLoading) {
       answerAudioLoading = true;
       answerAudio = new Howl({
-        src: [`/reveal/${puzzleId}.mp3`]
+        src: [`/medle/reveal/${puzzleId}.mp3`]
       });
       answerAudio.once('load', () => {
         btnPlay.classList.remove('disabled');
@@ -1335,7 +1336,7 @@ const puzzleLink = (index, showDate = true) => {
   let decomposition = getPuzzleId(index);
   let id = decomposition[0];
   // let suffix = decomposition[1];
-  let date = new Date('2022-05-15');
+  let date = new Date('2023-10-15');
   const a = document.createElement('a');
   a.classList.add('puzzle-link');
   date.setDate(date.getDate() + (id - 1));
@@ -1361,7 +1362,7 @@ const puzzleLink = (index, showDate = true) => {
     currentPuzzleLink = a;
     a.setAttribute('href', `javascript:closeModal()`);
   } else {
-    a.setAttribute('href', `/${index}?past`);
+    a.setAttribute('href', `/medle/${index}?past`);
   }
   return a;
 };
@@ -1426,17 +1427,17 @@ if (isDaily) {
     container.appendChild(puzzleLink(id + suffix));
   }
 }
-// if (guideToToday) {
-//   const guideLinks = document.getElementById('guide-today-links');
-//   guideLinks.appendChild(puzzleLink(puzzleId));
-//   guideLinks.appendChild(puzzleLink(todayDaily));
-//   let suffix = 'a';
-//   while (availablePuzzleIds.indexOf(todayDaily + suffix) != -1) {
-//     guideLinks.appendChild(puzzleLink(todayDaily + suffix));
-//     suffix = String.fromCharCode(suffix.charCodeAt(0) + 1);
-//   }
-//   showModal('modal-guide-today');
-// }
+if (guideToToday) {
+  const guideLinks = document.getElementById('guide-today-links');
+  guideLinks.appendChild(puzzleLink(puzzleId));
+  guideLinks.appendChild(puzzleLink(todayDaily));
+  let suffix = 'a';
+  while (availablePuzzleIds.indexOf(todayDaily + suffix) != -1) {
+    guideLinks.appendChild(puzzleLink(todayDaily + suffix));
+    suffix = String.fromCharCode(suffix.charCodeAt(0) + 1);
+  }
+  showModal('modal-guide-today');
+}
 
 if (localStorage.first === undefined) {
   showModal('modal-intro');
