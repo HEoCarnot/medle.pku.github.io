@@ -5,6 +5,7 @@
   <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
   <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' />
   <title>恐怖的回忆 PH #{{ it.id }}</title>
+  <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.7.1.min.js"></script>
   <link rel="stylesheet" href="/medle/static/index.css?t={{ it.currentTime }}">
   <link rel="icon" href="/medle/favicon.ico">
 </head>
@@ -54,22 +55,22 @@
     <div id='btns-container'>
       <div class='list btn hidden' id='input-btns-row-1'>
         <div class='bg'>
-          <div class='bubble solf-1' onclick='input(1)'>
+          <div class='bubble solf-1' onclick='inputGuess(1)'>
             <div class='content'>
               <div class='accidental'></div>
             </div>
           </div>
-          <div class='bubble solf-2' onclick='input(2)'>
+          <div class='bubble solf-2' onclick='inputGuess(2)'>
             <div class='content'>
               <div class='accidental'></div>
             </div>
           </div>
-          <div class='bubble solf-3' onclick='input(3)'>
+          <div class='bubble solf-3' onclick='inputGuess(3)'>
             <div class='content'>
               <div class='accidental'></div>
             </div>
           </div>
-          <div class='bubble solf-4' onclick='input(4)'>
+          <div class='bubble solf-4' onclick='inputGuess(4)'>
             <div class='content'>
               <div class='accidental'></div>
             </div>
@@ -116,22 +117,22 @@
       </div>
       <div class='list btn hidden must' id='input-btns-row-2'>
         <div class='bg'>
-          <div class='bubble solf-5' onclick='input(5)'>
+          <div class='bubble solf-5' onclick='inputGuess(5)'>
             <div class='content'>
               <div class='accidental'></div>
             </div>
           </div>
-          <div class='bubble solf-6' onclick='input(6)'>
+          <div class='bubble solf-6' onclick='inputGuess(6)'>
             <div class='content'>
               <div class='accidental'></div>
             </div>
           </div>
-          <div class='bubble solf-7' onclick='input(7)'>
+          <div class='bubble solf-7' onclick='inputGuess(7)'>
             <div class='content'>
               <div class='accidental'></div>
             </div>
           </div>
-          <div class='bubble nohidden' onclick='input(-1)'>
+          <div class='bubble nohidden' onclick='inputGuess(-1)'>
             <div id='input-btn-del-bg' class='content'></div>
           </div>
         </div>
@@ -674,7 +675,9 @@
   <script src='/medle/static/languages.js?t={{ it.currentTime }}'></script>
   <script>
   const puzzleId = {{ it.id | tojson | safe }};
-  const encodedTune = {{ it.tune | tojson | safe }};
+  const tune = {{ it.tune_no_answer | tojson | safe }};
+  const tuneDecos = {{ it.tuneDecos | tojson | safe }};
+  const tuneDur = {{ it.tuneDur | tojson | safe }};
   const tuneBeatDur = {{ it.tuneBeatDur }};
   const tunePitchBase = {{ it.tunePitchBase }};
   const tunePitchBend = {{ it.tunePitchBend }};
@@ -688,8 +691,21 @@
   
   const availablePuzzleIds = {{ it.availablePuzzleIds | tojson | safe }};
   const specialPuzzleIds = {{ it.specialPuzzleIds | tojson | safe }};
+
+  const history = {{ it.history | tojson | safe }};
+  const attemptsLimit = {{ it.attemptsLimit }};
+
+  const allPuzzleStatus = {{ it.allPuzzleStatus | tojson | safe }};
+  const statVisits = {{ it.statVisits | tojson | safe }};
+
+  var tuneAnswer = {{ it.tuneAnswer | tojson | safe }}
+
+  {% if it.i18nVars %}
+  var i18nVars = {{ it.i18nVars | tojson | safe }}
+  {% else %}
+  var i18nVars = ""
+  {% endif %}
   
-  const i18nVars = {{ it.i18nVars | tojson | safe }};
   </script>
   <script src='/medle/static/index.js?t={{ it.currentTime }}'></script>
 

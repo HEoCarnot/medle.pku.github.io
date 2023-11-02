@@ -9,8 +9,15 @@ const decode = (data) => {
   return JSON.parse(unescape(window.atob(ret.join(""))));
 };
 
-tune = decode(encodedTune);
-const N = tune.length;
+/*
+需要提前传回前端的参数
+N：个数
+tuneDur：持续时间
+tuneDecos: 是否高低八度
+tune：不带答案
+*/
+
+const N = tuneDecos.length;
 const DECO_8VA = 1;
 const DECO_8VB = 2;
 const DECO_SHARP = 4;
@@ -19,40 +26,14 @@ const DECO_APPO = 16;
 const MIN_PITCH = 24;
 const MAX_PITCH = 105;
 const dailyList = ['', 'EX', 'PH'];
-const tuneDecos = tune.map((note) => {
-  let a = note[0];
-  let r = 0;
-  if (a >= 100) {
-    r |= DECO_APPO;
-    a -= 100;
-    note[0] = a;
-  }
-  if (a < 1) r |= DECO_8VB;
-  if (a > 7) r |= DECO_8VA;
-  const i = Math.round(a);
-  if (i !== a) {
-    note[0] = i;
-    r |= (a < i ? DECO_FLAT : DECO_SHARP);
-  }
-  return r;
-});
-//混淆
-const tuneAnswer = tune.map((x) => (x[0] + 6) % 7 + 1);
 
-const lowerLimit = 5
-const upperLimit = 6
-const attemptsLimit = (N >= 10 ? upperLimit : lowerLimit);
+const upperLimit = 6;
+const lowerLimit = 5;
+
+//tuneAnswer: 答案
+//混淆
 
 const SCALE = [0, 2, 4, 5, 7, 9, 11];
-
-let tuneDur = 0;
-for (const v of tune) {
-  for (let i = 1; i < v.length; i++) {
-    const t = v[i];
-    v[i] = tuneDur;
-    tuneDur += t;
-  }
-}
 
 let sfxOn;
 let metronomeOn;
@@ -71,6 +52,7 @@ const loadMusicOffset = () => {
 let unknownStatus = false;
 
 const loadProblemStatus = () => {
+  return
   let x = localStorage.getItem("problemStatus-" + puzzleId);
   if (x === null) {
     localStorage.setItem("problemStatus-" + puzzleId, x = "0");
@@ -217,22 +199,28 @@ const createRow = (decos, parentEl, rowIndex) => {
 };
 
 const check = (answer, guess) => {
-  const n = answer.length;
-  const result = Array(n).fill(0);
-  for (let i = 0; i < n; i++)
-    guess[i] = parseInt(guess[i]);
-  for (let i = 0; i < n; i++)
-    if (answer[i] === guess[i]) result[i] = 2;
-  for (let i = 0; i < n; i++)
-    if (result[i] !== 2) {
-      // Look for the leftmost unmarked occurrence of answer[i] in the guess
-      for (let j = 0; j < n; j++)
-        if (result[j] === 0 && answer[i] === guess[j]) {
-          result[j] = 1;
-          break;
-        }
+
+  return new Promise(function(resolve, reject) {
+
+    var jsonData = {
+        guess: guess,
+        puzzle_id: puzzleId
     }
-  return result;
+
+    $.ajax({
+        url: "/backend/medle/check", // 请求的URL
+        method: 'POST', // 请求方法
+        contentType: 'application/json', // 请求数据类型
+        data: JSON.stringify(jsonData), // 将数据对象转为 JSON 字符串
+        success: function(data) {
+          resolve(data);
+        },
+        error: function(xhr, status, error) {
+          // 处理请求错误
+          reject(xhr, status, error);
+        }
+    });
+  });
 };
 
 const sendAnalytics = async (contents) => {
@@ -405,6 +393,7 @@ document.addEventListener('keydown', (e) => {
     acceptAdjustClick();
 });
 
+// 与答案无关
 const closeModal = () => {
   if (modalStack.length === 0 || onAdjust) return;
   // Close the topmost modal
@@ -436,8 +425,10 @@ const loadingProgress = document.getElementById('text-loading-progress');
 const startButton = document.getElementById('btn-start');
 const textTip = document.getElementById('text-tip');
 
+
 // Back up local storage with cookies
 const clearCookies = () => {
+  return
   const items = document.cookie.split(';');
   if (items)
     for (const s of items) {
@@ -448,6 +439,7 @@ const clearCookies = () => {
     }
 };
 const cookieToLocalStorage = () => {
+  return
   localStorage.clear();
   const items = document.cookie.split(';');
   for (const s of items) {
@@ -458,6 +450,7 @@ const cookieToLocalStorage = () => {
   }
 };
 const localStorageToCookie = () => {
+  return
   clearCookies();
   for (const [key, value] of Object.entries(localStorage)) {
     document.cookie = `${encodeURIComponent(key)}=${encodeURIComponent(value)}; samesite=strict; max-age=2592000`;
@@ -478,6 +471,7 @@ let gamePreloaded = false;
 let gameStarted = false;
 let statMode = 0;
 
+// 与答案无关
 const flushStat = () => {
   let cnt = [0, 0, 0, 0, 0, 0, 0, 0];
   const getNum = (str) => {
@@ -525,7 +519,7 @@ const flushStat = () => {
   );
 
 };
-
+// 与答案无关
 const flushStatButtons = (num) => {
   for (let i = 0; i < 3; i ++) {
     if (i === num)
@@ -535,7 +529,7 @@ const flushStatButtons = (num) => {
   }
   flushStat();
 }
-
+// 与答案无关
 const initStatEvents = () => {
   document.getElementById('icon-btn-stat').addEventListener('click', () => {
     showModal('modal-stat');
@@ -547,17 +541,14 @@ const initStatEvents = () => {
 
 initStatEvents();
 
-const startGame = (savedGuesses = []) => {
+// 开始游戏函数
+const startGame = () => {
   gameStarted = true;
   startButton.classList.add('hidden');
   document.getElementById('start-btn-container').classList.add('no-pointer');
   textTip.classList.add('hidden');
-  if (!(localStorage.getItem("savedGuesses-" + puzzleId) !== undefined &&
-    localStorage.getItem("savedGuesses-" + puzzleId) !== null)) {
-    sendAnalytics('start');
-    localStorage.setItem("savedGuesses-" + puzzleId, "");
-    savedGuesses = [];
-  }
+
+  savedGuesses = history.guesses
 
   const listContainer = document.getElementById('list-container');
   const btnsRow1 = document.getElementById('input-btns-row-1');
@@ -568,6 +559,9 @@ const startGame = (savedGuesses = []) => {
   const btnsReveal = document.getElementById('input-btns-reveal');
   const btnRevealBg = document.getElementById('input-btn-reveal-bg');
   const visitorCount = document.getElementById('total-visitors');
+
+  const answerContainer = document.getElementById('answer-container');
+  const answerRow = createRow(tuneDecos, answerContainer);
 
   let curPfSound = undefined;
   const stopPfSound = () => {
@@ -764,7 +758,7 @@ const startGame = (savedGuesses = []) => {
 
   let r = initialRow;
 
-  window.input = (i) => {
+  window.inputGuess = (i) => {
     if (attResults.length === attemptsLimit || succeeded) return;
     stopReplay();
     if (i === -1 && curInput.length > 0) {
@@ -801,109 +795,120 @@ const startGame = (savedGuesses = []) => {
     stopReplay();
     showButtons(false);
     const input = (silence ? data : curInput.splice(0));
-    previousGuesses.push(input.join(""));
-    localStorage.setItem("savedGuesses-" + puzzleId, previousGuesses.join(","));
-    const result = check(tuneAnswer, input);
-    r.show(true);
-    const previousRow = r;
-    const notePopSpeed = 20;
-    if (silence) {
-      const paint = (i, time) => {
-        setTimeout(() => {
-          if (result[i] === 0) previousRow.style(i, 'none');
-          if (result[i] === 1) previousRow.style(i, 'maybe');
-          if (result[i] === 2) previousRow.style(i, 'bingo');
-          previousRow.style(i, 'solf-' + input[i]);
-        }, time);
+    check(tuneAnswer, input).then((data) => {
+      if (data.status !== 0) {
+        return
       }
-      for (let i = 0; i < input.length; i ++)
-        paint(i, i * notePopSpeed);
-    }
-    else
-      for (let i = 0; i < N; i++) {
-        const ts = tune[i];
-        const r = previousRow;
-        for (let j = 1; j < ts.length; j++) {
+      result = data.result
+
+      r.show(true);
+      const previousRow = r;
+      const notePopSpeed = 20;
+      if (silence) {
+        const paint = (i, time) => {
           setTimeout(() => {
-            setTimeout(() => {
-              r.pop(i, (ts[j + 1] - ts[j]) * tuneBeatDur);
-              if (result[i] === 0) r.style(i, 'none');
-              if (result[i] === 1) r.style(i, 'maybe');
-              if (result[i] === 2) r.style(i, 'bingo');
-            }, Math.max(0, -musicOffset))
-            const pop = (result[i] !== 2);
-            playForPos(i, input[i], pop ? 0.2 : 1);
-            if (pop) playPopForPos(i);
-          }, 500 + (ts[j] + metronomeOffset()) * tuneBeatDur);
+            if (result[i] === 0) previousRow.style(i, 'none');
+            if (result[i] === 1) previousRow.style(i, 'maybe');
+            if (result[i] === 2) previousRow.style(i, 'bingo');
+            previousRow.style(i, 'solf-' + input[i]);
+          }, time);
         }
-        if (!silence){
-          for (let t = metronome[0]; t < tuneDur; t += metronome[1]) {
-            setTimeout(() => playSound('beat', 0.5),
-              500 + (t + metronomeOffset()) * tuneBeatDur + Math.max(0, musicOffset));
+        for (let i = 0; i < input.length; i ++)
+          paint(i, i * notePopSpeed);
+      }
+      else {
+        for (let i = 0; i < N; i++) {
+          const ts = tune[i];
+          const r = previousRow;
+          for (let j = 1; j < ts.length; j++) {
+            setTimeout(() => {
+              setTimeout(() => {
+                r.pop(i, (ts[j + 1] - ts[j]) * tuneBeatDur);
+                if (result[i] === 0) r.style(i, 'none');
+                if (result[i] === 1) r.style(i, 'maybe');
+                if (result[i] === 2) r.style(i, 'bingo');
+              }, Math.max(0, -musicOffset))
+              const pop = (result[i] !== 2);
+              playForPos(i, input[i], pop ? 0.2 : 1);
+              if (pop) playPopForPos(i);
+            }, 500 + (ts[j] + metronomeOffset()) * tuneBeatDur);
           }
-          for (let t = metronome[0] + metronome[1] * metronome[2]; t < tuneDur; t += metronome[1] * metronome[3]) {
-            setTimeout(() => playSound('strongBeat', 0.5),
-              500 + (t + metronomeOffset()) * tuneBeatDur + Math.max(0, musicOffset));
+          if (!silence){
+            for (let t = metronome[0]; t < tuneDur; t += metronome[1]) {
+              setTimeout(() => playSound('beat', 0.5),
+                500 + (t + metronomeOffset()) * tuneBeatDur + Math.max(0, musicOffset));
+            }
+            for (let t = metronome[0] + metronome[1] * metronome[2]; t < tuneDur; t += metronome[1] * metronome[3]) {
+              setTimeout(() => playSound('strongBeat', 0.5),
+                500 + (t + metronomeOffset()) * tuneBeatDur + Math.max(0, musicOffset));
+            }
           }
         }
       }
-    attInputs.push(input);
-    attResults.push(result);
-    succeeded = result.every((r) => r === 2);
-    const finished = (attResults.length === attemptsLimit || succeeded);
-    let newRow;
-    if (!finished) {
-      newRow = r = createRow(tuneDecos, listContainer, attResults.length);
-      r.show(false);
-      r.serrated(true);
-      attRows.push(r);
-    }
-    if (!revealSilence)
-      setTimeout(async () => {
-        let currFinished = (attResults.length === attemptsLimit || succeeded);
-        if (currFinished) {
-          if (haveRevealed)
-            return;
-          haveRevealed = true;
-          // Send analytics
-          let visits = [];
-          if (!silence) {
-            // sendAnalytics('fin ' + attInputs.map((a) => a.join('')).join(','));
-            visits = await sendAnalytics('fin ' + (succeeded ? attInputs.length : attemptsLimit + 1));
-            const problemStatus = (succeeded ? String(attInputs.length) : 'fail');
-            localStorage.setItem("problemStatus-" + puzzleId, problemStatus);
-            addStatistics(problemStatus);
+      attInputs.push(input);
+      attResults.push(result);
+      succeeded = data.succeeded
+      const finished = (attResults.length === attemptsLimit || succeeded);
+      let newRow;
+      if (!finished) {
+        newRow = r = createRow(tuneDecos, listContainer, attResults.length);
+        r.show(false);
+        r.serrated(true);
+        attRows.push(r);
+      }
+      if (!revealSilence)
+        setTimeout(async () => {
+          let currFinished = (attResults.length === attemptsLimit || succeeded);
+          if (currFinished) {
+            if (haveRevealed)
+              return;
+            haveRevealed = true;
+
+            tuneAnswer = data.tuneAnswer
+            
+            updateInterfaceLanguageWithAnswer(data.i18nVars)
+
+            for (let i = 0; i < N; i++)
+              answerRow.fill(i, tuneAnswer[i]);
+            answerRow.serrated(true);
+
+            // Send analytics
+            let visits = data.visits;
+            // if (!silence) {
+            //   // sendAnalytics('fin ' + attInputs.map((a) => a.join('')).join(','));
+            //   visits = await sendAnalytics('fin ' + (succeeded ? attInputs.length : attemptsLimit + 1));
+            //   const problemStatus = (succeeded ? String(attInputs.length) : 'fail');
+            //   localStorage.setItem("problemStatus-" + puzzleId, problemStatus);
+            //   addStatistics(problemStatus);
+            // }
+            // else {
+            //   if (localStorage.getItem("problemStatus-" + puzzleId) === "0") {
+            //     if (!unknownStatus) {
+            //       // after update but havn't added into database
+            //       visits = await sendAnalytics('fin ' + (succeeded ? attInputs.length : attemptsLimit + 1));
+            //     }
+            //     else
+            //       visits = await sendAnalytics('fetch');
+            //     const problemStatus = (succeeded ? String(attInputs.length) : 'fail');
+            //     localStorage.setItem("problemStatus-" + puzzleId, problemStatus);
+            //     addStatistics(problemStatus);
+            //   }
+            //   else
+            //     visits = await sendAnalytics('fetch');
+            // }
+            // Reveal answer
+            window.revealAnswer(visits);
+            showButtons(true);
+          } else {
+            for (let i = 0; i < N; i++) newRow.clear(i);
+            showButtons(true);
           }
-          else {
-            if (localStorage.getItem("problemStatus-" + puzzleId) === "0") {
-              if (!unknownStatus) {
-                // after update but havn't added into database
-                visits = await sendAnalytics('fin ' + (succeeded ? attInputs.length : attemptsLimit + 1));
-              }
-              else
-                visits = await sendAnalytics('fetch');
-              const problemStatus = (succeeded ? String(attInputs.length) : 'fail');
-              localStorage.setItem("problemStatus-" + puzzleId, problemStatus);
-              addStatistics(problemStatus);
-            }
-            else
-              visits = await sendAnalytics('fetch');
-          }
-          // Reveal answer
-          window.revealAnswer(visits);
-          showButtons(true);
-        } else {
-          for (let i = 0; i < N; i++) newRow.clear(i);
-          showButtons(true);
-        }
-      }, (silence ? 100 + input.length * notePopSpeed : 500 + (tuneDur + metronomeOffset()) * tuneBeatDur + 1000 + Math.abs(musicOffset)));
+        }, (silence ? 100 + input.length * notePopSpeed : 500 + (tuneDur + metronomeOffset()) * tuneBeatDur + 1000 + Math.abs(musicOffset)));
+    }).catch((xhr, status, error) => {
+      console.error(error)
+    })
   };
 
-  const answerContainer = document.getElementById('answer-container');
-  const answerRow = createRow(tuneDecos, answerContainer);
-  for (let i = 0; i < N; i++)
-    answerRow.fill(i, tuneAnswer[i]);
-  answerRow.serrated(true);
 
   const btnShare = document.getElementById('btn-share');
   new ClipboardJS(btnShare, {
@@ -1217,33 +1222,102 @@ const startGame = (savedGuesses = []) => {
     if (e.key.length === 1) {
       // Numeric
       const num = e.key.charCodeAt(0) - 48;
-      if (num >= 1 && num <= 7) window.input(num);
+      if (num >= 1 && num <= 7) window.inputGuess(num);
       // Alphabetic
       if (localStorage.notation === 'nota-alpha') {
         const alpha = e.key.charCodeAt(0) - 97;
         if (alpha >= 0 && alpha <= 6) {
           const note = tuneNoteBase.charCodeAt(0) - 65;
-          window.input((alpha - note + 7) % 7 + 1);
+          window.inputGuess((alpha - note + 7) % 7 + 1);
         }
       }
     } else if (e.key === 'Backspace') {
-      window.input(-1);
+      window.inputGuess(-1);
     } else if (e.key === 'Enter') {
       if (curInput.length === N)
         window.confirmGuess();
     }
   });
 
+  const showNewRows = (index, silence = false, revealSilence = false) => {
+
+    result = history.results[index]
+    input = history.guesses[index]
+
+    r.show(true);
+    const previousRow = r;
+    const notePopSpeed = 20;
+    const paint = (i, time) => {
+      setTimeout(() => {
+        if (result[i] === 0) previousRow.style(i, 'none');
+        if (result[i] === 1) previousRow.style(i, 'maybe');
+        if (result[i] === 2) previousRow.style(i, 'bingo');
+        previousRow.style(i, 'solf-' + input[i]);
+      }, time);
+    }
+    for (let i = 0; i < input.length; i ++)
+      paint(i, i * notePopSpeed);
+
+    attInputs.push(input);
+    attResults.push(result);
+    succeeded = history.succeeded
+    const finished = history.finished;
+    const currFinished = !revealSilence || result.every(num => num === 2)
+    let newRow;
+    if (!currFinished) {
+      newRow = r = createRow(tuneDecos, listContainer, attResults.length);
+      r.show(false);
+      r.serrated(true);
+      attRows.push(r);
+    }
+    if (!revealSilence)
+      setTimeout(async () => {
+        if (finished) {
+          if (haveRevealed)
+            return;
+          haveRevealed = true;
+          
+          updateInterfaceLanguageWithAnswer(i18nVars)
+
+          for (let i = 0; i < N; i++)
+            answerRow.fill(i, tuneAnswer[i]);
+          answerRow.serrated(true);
+
+          // Send analytics
+          let visits = statVisits;
+          // if (localStorage.getItem("problemStatus-" + puzzleId) === "0") {
+          //   if (!unknownStatus) {
+          //     // after update but havn't added into database
+          //     visits = await sendAnalytics('fin ' + (succeeded ? attInputs.length : attemptsLimit + 1));
+          //   }
+          //   else
+          //     visits = await sendAnalytics('fetch');
+          //   const problemStatus = (succeeded ? String(attInputs.length) : 'fail');
+          //   localStorage.setItem("problemStatus-" + puzzleId, problemStatus);
+          //   addStatistics(problemStatus);
+          // }
+          // else
+          //   visits = await sendAnalytics('fetch');
+          // Reveal answer
+          window.revealAnswer(visits);
+          showButtons(true);
+        } else {
+          for (let i = 0; i < N; i++) newRow.clear(i);
+          showButtons(true);
+        }
+      }, (silence ? 100 + input.length * notePopSpeed : 500 + (tuneDur + metronomeOffset()) * tuneBeatDur + 1000 + Math.abs(musicOffset)));
+  }
+
   // * save today's progress
   const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay));
   const loadSavedStorage = async () => {
-    if (savedGuesses.length === 0) {
+    if (history.guesses.length === 0) {
       animateInitialRow(initialRow);
       return;
     }
     await sleep(100);
-    for (let i = 0; i < savedGuesses.length; i++) {
-      confirmGuess(true, savedGuesses[i].split(''), i !== savedGuesses.length - 1);
+    for (let i = 0; i < history.guesses.length; i++) {
+      showNewRows(i, true, i !== history.guesses.length - 1);
       await sleep(100);
     }
   };
@@ -1280,10 +1354,8 @@ for(let i = 0; i < 4; i ++) {
 }
 
 const checkPuzzleStorage = () => {
-  if (localStorage.getItem("savedGuesses-" + puzzleId) !== undefined &&
-    localStorage.getItem("savedGuesses-" + puzzleId) !== null &&
-    localStorage.getItem("savedGuesses-" + puzzleId) !== "") {
-    startGame(localStorage.getItem("savedGuesses-" + puzzleId).split(","));
+  if (history.guesses != []) {
+    startGame();
   }
 }
 
@@ -1350,7 +1422,7 @@ const puzzleLink = (index, showDate = true) => {
     a.innerHTML =
       `<span data-t='hidden'></span>` +
       ` — <strong>${index}</strong>`;
-  let stat = localStorage.getItem('problemStatus-' + index);
+  let stat = allPuzzleStatus['problemStatus-' + index];
   if (stat !== null && stat !== "0" && index !== puzzleId) {
     if (stat === 'fail')
       a.classList.add('fail');
@@ -1520,14 +1592,9 @@ const i18nEls = document.querySelectorAll('[data-t]');
 const updateInterfaceLanguage = () => {
   const dict = window.languages[curLang][2];
   const langName = window.languages[curLang][0];
-  const langVars = decode(i18nVars)[langName];
   for (const el of i18nEls) {
     const key = el.dataset.t;
     if (key[0] === '=') {
-      if (el.tagName === 'IMG')
-        el.alt = langVars[key.substring(1)].replace(/\n/g, "<br>");
-      else
-        el.innerHTML = langVars[key.substring(1)].replace(/\n/g, "<br>");
     } else {
       el.innerHTML = dict[key];
     }
@@ -1537,6 +1604,20 @@ const updateInterfaceLanguage = () => {
   localStorage.lang = langName;
   localStorageToCookie();
 };
+
+const updateInterfaceLanguageWithAnswer = (i18nVars) => {
+  const langName = window.languages[curLang][0];
+  const langVars = decode(i18nVars)[langName];
+  for (const el of i18nEls) {
+    const key = el.dataset.t;
+    if (key[0] === '=') {
+      if (el.tagName === 'IMG')
+        el.alt = langVars[key.substring(1)].replace(/\n/g, "<br>");
+      else
+        el.innerHTML = langVars[key.substring(1)].replace(/\n/g, "<br>");
+    } 
+  }
+}
 
 // Find previously stored language or preferred language
 const langCode = (localStorage.lang || window.navigator.languages[0]).split('-');
