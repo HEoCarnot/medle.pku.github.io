@@ -1,5 +1,7 @@
 # TOUHOU Medle
 
+请访问：[**fantasyguide.cn/medle/**](https://fantasyguide.cn/medle/)
+
 榆木华佬的原网址：[**medle.akashiya.top**](https://medle.akashiya.top/)（已停服）
 
 鸣谢榆木华！
