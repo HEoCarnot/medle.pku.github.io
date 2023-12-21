@@ -1,7 +1,7 @@
 from ruamel.yaml import YAML, CommentedMap
 from ruamel.yaml.comments import CommentedSeq as CS
 from getopt import getopt
-from sys import argv
+from sys import argv, exit
 from os import getcwd
 yaml=YAML()
 yaml.default_flow_style = None
