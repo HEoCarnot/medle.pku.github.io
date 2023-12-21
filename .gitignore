@@ -8,6 +8,19 @@
 # 忽略resilio sync备份
 .sync/
 # 隐藏试题
-/puzzles/*.yml
+/puzzles/[0-9][0-9][0-9].yml
+/puzzles/*EX.yml
+/puzzles/*PH.yml
+/puzzles/*u.yml
+/puzzles/*a.yml
+/puzzles/*copy.yml
 /puzzles/reveal/*.mp3
 /puzzles/reveal/*.wav
+/puzzles/.sync/*
+/puzzles/.history/*
+# 忽略编译后的文件
+/build
+/dist
+#include 001.yml
+!/puzzles/001.yml
+!/puzzles/reveal/001.mp3

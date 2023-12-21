@@ -17,8 +17,10 @@ TOUHOU melody puzzle game (available in en/zh)
 
 ## 面向小白的部署、出题教程
 
-后面这些以数字开头的文件，只要输入一个数字，再按 `Tab`键，即可自动补全（`22. midi2tune.py`这样的文件，也只需要输一个2，然后多按几遍`Tab`键
+后面这些以数字开头的文件，只要输入一个数字，再按 `Tab`键，即可自动补全（`22. midi2tune.py`这样的文件，也只需要输一个2，然后多按几遍 `Tab`键
 ）
+
+这一套流程的完整范例可以参看DDC.yml。这个范例最终呈现为001.yml。
 
 ### 部署
 
@@ -31,10 +33,10 @@ TOUHOU melody puzzle game (available in en/zh)
 
 1. 运行 `1. run medle.bat`
 2. 使用宿主或者打谱软件扒谱，导出一份XXX.mid文件，放在puzzles\midi内，建议mid包含拍号、调号、速度信息
-3. 运行 `"2. midi2tune.exe" -n XXX`，还有些选项可以通过 `-h`查看，之后puzzles\unhandled内有了一个XXX.yml
-4. 对这个.yml进行处理（具体处理方法见 `puzzle_maker.md`），然后 `"3. puzzle_maker.exe" -n XXX`，也有一些选项可以通过 `-h`查看
-5. 剪辑MP3音频，放在puzzles\reveal内，并且调整回放偏移量
-6. 点击1.步骤中命令行内的网址，并且选择这一个谜题，检查是否有问题
+3. 运行 `"2. midi2tune.exe" -n XXX`，还有些选项可以通过 `-h`查看，之后puzzles\unhandled内有了一个XXX.yml（警告：会覆盖puzzles\unhandled\内原有的yml）
+4. 先运行 `"3. puzzle_maker.exe" -n XXX`，点击1.步骤中命令行内的网址，查看回放是否正确（警告：会覆盖puzzles\内原有的yml）
+5. 对这个.yml进行处理（具体处理方法见 `puzzle_maker.md`），然后再 `"3. puzzle_maker.exe" -n XXX`，也有一些选项可以通过 `-h`查看，查看回放是否正确
+6. 剪辑MP3音频，放在puzzles\reveal内，并且调整回放偏移量，最后填入曲目信息，查看回放是否正确
 7. 无误的话可以在[网盘链接](https://disk.pku.edu.cn/#/link/AB98C421790DE568D6EC606E5BD2F6AF)内提交puzzles\内的最终yml和音频mp3（打包成一个压缩包）
 
 ## [zh] 服务端程序

@@ -16,13 +16,13 @@ tune:
 - [2, 2.0]
 - [3, 16.0]
 
-tuneBeatDur: 15000/144
+tuneBeatDur: 15000/157.5
 tunePitchBase: E4
 metronome: [0, 4, 2, 4]
 # [等几拍敲第一下,每过几个时间单位敲一下,开头敲几下后是重拍,每几拍一个重拍]
 
-tuneRevealBeatDur: 15000/144
-tuneRevealOffset: 15000/144*(0) # 括号内填写多少个时间单位后开始钢琴窗第一个音
+tuneRevealBeatDur: 15000/157.5
+tuneRevealOffset: 15000/157.5*(0) # 括号内填写多少个时间单位后开始钢琴窗第一个音
 
 zh-Hans:
   title:  （）
