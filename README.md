@@ -17,21 +17,22 @@ TOUHOU melody puzzle game (available in en/zh)
 
 ## 面向小白的部署、出题教程
 
-后面这些以数字开头的文件，只要输入一个数字，再按 `Tab`键，即可自动补全
+后面这些以数字开头的文件，只要输入一个数字，再按 `Tab`键，即可自动补全（`22. midi2tune.py`这样的文件，也只需要输一个2，然后多按几遍`Tab`键
+）
 
 ### 部署
 
 1. 安装Node.js
 2. 运行 `0. install medle.bat`（可能需要管理员权限）
 3. 运行 `9. create folders（不会覆盖已有数据）.ba`t以创建所需要的谜题文件夹
-4. 如果出题想要使用辅助工具，需要安装python以及包：ruamel.yaml, music21，也可以使用打包好的exe（不推荐，文件太大了，需要的话去下面的网盘链接里找一找）
+4. 如果出题想要使用辅助工具，需要安装python以及包：ruamel.yaml, music21，也可以使用打包好的exe（exe可能有点大，已经尽量打包了）
 
 ### 出题
 
 1. 运行 `1. run medle.bat`
 2. 使用宿主或者打谱软件扒谱，导出一份XXX.mid文件，放在puzzles\midi内，建议mid包含拍号、调号、速度信息
-3. 运行 `python "2. midi2tune.py" -n XXX`，还有些选项可以通过 `-h`查看，之后puzzles\unhandled内有了一个XXX.yml
-4. 对这个.yml进行处理（具体处理方法见 `puzzle_maker.md`），然后 `python "3. puzzle_maker.py" -n XXX`，也有一些选项可以通过 `-h`查看
+3. 运行 `"2. midi2tune.exe" -n XXX`，还有些选项可以通过 `-h`查看，之后puzzles\unhandled内有了一个XXX.yml
+4. 对这个.yml进行处理（具体处理方法见 `puzzle_maker.md`），然后 `"3. puzzle_maker.exe" -n XXX`，也有一些选项可以通过 `-h`查看
 5. 剪辑MP3音频，放在puzzles\reveal内，并且调整回放偏移量
 6. 点击1.步骤中命令行内的网址，并且选择这一个谜题，检查是否有问题
 7. 无误的话可以在[网盘链接](https://disk.pku.edu.cn/#/link/AB98C421790DE568D6EC606E5BD2F6AF)内提交puzzles\内的最终yml和音频mp3（打包成一个压缩包）

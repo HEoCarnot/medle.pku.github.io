@@ -203,7 +203,9 @@ const servePuzzle = async (req, puzzleId, checkToday) => {
     const noteName = note[0].toString();
     let noteValue = parseInt(noteName[0]);
     if (noteName.indexOf('-') !== -1) noteValue -= 7;
+    // if (noteName.indexOf('--') !== -1) noteValue -= 7;
     if (noteName.indexOf('+') !== -1) noteValue += 7;
+    // if (noteName.indexOf('++') !== -1) noteValue += 7;
     if (noteName.indexOf('b') !== -1) noteValue -= 0.1;
     if (noteName.indexOf('#') !== -1) noteValue += 0.1;
     if (noteName.indexOf('*') !== -1) noteValue += 100;
@@ -394,7 +396,7 @@ const handler = async (req, res) => {
   respond_request(resp, res);
 };
 
-const port = process.env.PORT || 2222;
+const port = process.env.PORT || 12346;
 // const port = 2222;
 log(`http://localhost:${port}/`);
 
