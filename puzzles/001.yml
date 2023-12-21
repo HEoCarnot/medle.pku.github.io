@@ -10,18 +10,18 @@ tune:
 - [2, 2.0]
 - [3, 16.0]
 
-tuneBeatDur: 15000/144
+tuneBeatDur: 15000/157.5
 tunePitchBase: E4
 metronome: [0, 4, 2, 4]
 # [等几拍敲第一下,每过几个时间单位敲一下,开头敲几下后是重拍,每几拍一个重拍]
 
-tuneRevealBeatDur: 15000/144
-tuneRevealOffset: 15000/144*(0) # 括号内填写多少个时间单位后开始钢琴窗第一个音
+tuneRevealBeatDur: 15000/157.5
+tuneRevealOffset: 15000/157.5*(4+8*16-8) # 括号内填写多少个时间单位后开始钢琴窗第一个音
 
 zh-Hans:
-  title: （）
+  title:  Magical Storm（マジカルストーム）
   author: ZUN
-  desc: 《》。
+  desc:   《东方辉针城》4面主题曲。
 # 示例：
 # title: 门前的妖怪小姑娘（門前の妖怪小娘）
 # desc:  《东方神灵庙》2面BOSS幽谷响子的主题曲。
