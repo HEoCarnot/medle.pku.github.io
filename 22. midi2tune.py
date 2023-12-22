@@ -3,9 +3,12 @@ from ruamel.yaml.comments import CommentedSeq as CS
 from getopt import getopt
 from sys import argv, exit
 from os import getcwd
+from naming_mtds import *
+from pathlib import Path
 yaml=YAML()
 yaml.default_flow_style = None
 import music21
+
 
 #plusminus: 当有两个八度时，倾向于+还是-？ 0：-，1：+
 plusminus = 1
@@ -13,11 +16,11 @@ plusminus = 1
 #注意：打谱时，弱起的小节也要留够完整的时值，比如4/4拍，弱起小节也要留够4拍
 firstBeat = 0
 name = '001'
-directory = "./puzzles/"
+directory = Path("./puzzles/")
 opts, args = getopt(argv[1:], "hp:f:n:d:", ["help", "plusminus=", "firstbeat=", "name=", "dir="])
 helpdoc = """
-python "2. midi2tune.py" -n <name> [-p <plusminus>] [-f <firstbeat>] [-d <directory>]
-or: python "2. midi2tune.py" --name=<name> [--plusminus=<plusminus>] [--firstbeat=<firstbeat>] [-dir=<directory>]
+midi2tune -n <name> [-p <plusminus>] [-f <firstbeat>] [-d <directory>]
+or: midi2tune --name=<name> [--plusminus=<plusminus>] [--firstbeat=<firstbeat>] [-dir=<directory>]
     从 <directory>/midi/<name>.mid 读取midi文件，生成 <directory>/unhandled/<name>.yml
     -p, --plusminus: 1则优先使用+，
                      0则优先使用-，
@@ -39,10 +42,11 @@ for opt, arg in opts:
     elif opt in ("-n", "--name"):
         name = arg
     elif opt in ("-d", "--dir"):
-        directory = arg
+        directory = Path(arg)
 
 # music21.defaults.quantizationQuarterLengthDivisors = (8, 3)
-mid = music21.converter.parse(directory+'midi/'+name+'.mid', quantizePost=False)
+mid_name = str(directory/'midi'/(name+'.mid'))
+mid = music21.converter.parse(mid_name, quantizePost=False)
 # music21.configure.run()
 # print(dir(mid))
 
@@ -223,6 +227,9 @@ en:
 curator: zzz
 """
 
-with open(directory+'unhandled/'+name+'.yml', 'w', encoding='utf-8') as f:
+yml_file = directory/'unhandled'/(name+'.yml')
+exist_rename(yml_file)
+with open(yml_file, 'w', encoding='utf-8') as f:
     yaml.dump(result, f)
     f.write(tunename)
+print('generated: '+str(yml_file))

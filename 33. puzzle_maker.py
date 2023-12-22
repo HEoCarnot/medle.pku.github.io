@@ -1,28 +1,32 @@
 from ruamel.yaml import YAML
 from ruamel.yaml.comments import CommentedSeq as CS
 from getopt import getopt
-from sys import argv, exit
+from sys import argv, exit, stdout
 from os import getcwd
 yaml=YAML()
 yaml.default_flow_style = None
+from pathlib import Path
+from naming_mtds import *
 # import os
 
 # mode=1: fold some of the notes
 # mode=2: fold completely as guided by your guidance
-# mode=3: 
+# mode=3: fold all the same notes
 
 mode = 1
 name = '001'
-directory = "./puzzles/"
-opts, args = getopt(argv[1:], "hm:n:d:", ["help", "mode=", "name=", "dir="])
+sign = ''
+directory = Path("./puzzles/")
+opts, args = getopt(argv[1:], "hm:n:d:s:", ["help", "mode=", "name=", "dir=", "sign="])
 helpdoc = """
-python "3. puzzle_maker.py" -n <name> [-m <mode>] [-d <directory>]
-or: python "3. puzzle_maker.py" --name=<name> [--mode=<mode>] [-dir=<directory>]
+puzzle_maker -n <name> [-m <mode>] [-d <directory>]
+or: puzzle_maker --name=<name> [--mode=<mode>] [-dir=<directory>]
     从 <directory>/unhandled/<name>.yml 读取未处理的谱面，生成 <directory>/<name>.yml
     警告：会覆盖已有的 <directory>/<name>.yml！建议各种修改在unhandled/<name>.yml中进行!
-    -m, --mode: 1则只折叠部分音符（不想折叠也可以选1），2则完全按照自己所写的顺序折叠
+    -m, --mode: 1则只折叠部分音符（不想折叠也可以选1），2则完全按照自己所写的顺序折叠，3则在控制台输出每行后面添加了这个音的标记的谱面，但不输出文件
         缺省为1
     -d, --dir: 指定目录，缺省为./puzzles/。请确保unhandled文件夹存在
+    -s, --sign: 模式3中标记的后缀，缺省为''，例如- [7, 4] => - [7, 4, 7]；若-s a，则- [7, 4] => - [7, 4, 7a]
 """
 for opt, arg in opts:
     if opt in ("-h", "--help"):
@@ -34,9 +38,11 @@ for opt, arg in opts:
         name = arg
     elif opt in ("-d", "--dir"):
         directory = arg
+    elif opt in ("-s", "--sign"):
+        sign = arg
 
-unhandled = directory+'unhandled/'+name+".yml"
-handled = directory+name+".yml"
+unhandled = directory/'unhandled'/(name+".yml")
+handled = directory/(name+".yml")
 
 try:
     with open(unhandled, encoding='utf-8') as f:
@@ -91,7 +97,22 @@ def getIndex(flag, x): #有可能这是最后一个音
         return j
     except ValueError:
         return len(flag)
+    
+def correct_format(x):
+    try:
+        x = int(x)
+    except:
+        pass
+    return x
 
+if mode == 3:
+    print(sign)
+    for x in utune:
+        y = correct_format(str(x[0])+sign)
+        x.append(y)
+    output = {'tune': utune}
+    yaml.dump(output, stdout)
+    exit(0)
 
 a = checkValid(utune)
 if a[0] == 1:
@@ -167,9 +188,7 @@ elif mode == 2:
             note.append(calcOffset(utune, posnotes[-1], len(utune)))
             # print(note)
         tune.append(note)
-
-
-            
+          
 
 # print(tune)
 
@@ -184,7 +203,8 @@ elif mode == 2:
 result['tune'] = tune
 result.yaml_set_comment_before_after_key('tuneBeatDur', before='\n')
 # print(type(result))
+exist_rename(handled)
 with open(handled, 'w', encoding='utf-8') as f:
     yaml.dump(result, f)
-    
+print(f'generated: {handled}')
 # print(utune)

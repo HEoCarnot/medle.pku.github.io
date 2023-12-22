@@ -12,12 +12,13 @@ from datetime import datetime
 name = argv[1]
 unzipflag = 0
 directory = "./puzzles/"
-opts, args = getopt(argv[2:], "um:d:r:", [])
+opts, args = getopt(argv[2:], "umd:r:", [])
 
 zipexe = r'"D:\Program Files\7-Zip\7z.exe" '
 ymlcom = r'e -ir!*.yml -o.\puzzles\ -y E:\Downloads\Compressed\069.zip'
 mp3com = r'e -ir!*.mp3 -o.\puzzles\reveal -y E:\Downloads\Compressed\069.zip'
 no_mp3 = 0
+dontprocess = 0
 
 # 设置源文件路径和目标路径
 source_folder = Path('./puzzles/')
@@ -45,17 +46,7 @@ def runcom(com, mute=0):
 #     assert 'Everything is Ok' in out, out
 # def okffmpeg(out):
 
-# 如果文件存在，重命名
-def exist_rename(old_file):
-    if old_file.exists():
-        # print('***********************')
-        print('  *'+str(old_file) + ' exists!')
-        now = datetime.now()
-        new_name = old_file.stem + f".z{now.strftime('%Y%m%d_%H%M%S')}_{now.microsecond}"+old_file.suffix
-        new_file = old_file.parent / new_name
-        old_file.rename(new_file)
-        print('  *  renamed as '+str(new_file))
-        print('  *********************')
+from naming_mtds import *
 # 刷新文件名。
 def refresh_name():
     global name
@@ -90,13 +81,10 @@ for opt, arg in opts:
         print('-----------------------')
         
         refresh_name()
+    elif opt in ("-m", "--dontprocess"):
+        dontprocess = 1
 
 # print(name)
-
-
-        
-
-
 
 # 解压文件
 if unzipflag:
@@ -130,51 +118,69 @@ if unzipflag and wav_file.exists():
         exist_rename(mp3_file)
         wav_file.rename(mp3_file)
         print('  wav file renamed')
+        dontprocess = 0
     else: #如果存在mp3，则使用之
         print('  mp3 file exists, mp3 used instead')
     print('-----------------------')
 
+
+if not dontprocess:
 # 查看MP3文件信息
-mp3_path = str(mp3_file)
-# print('audio info')
-mp3info = runcom(['ffprobe', mp3_path, '-hide_banner'], 1)
+    mp3_path = str(mp3_file)
+    # print('audio info')
+    mp3info = runcom(['ffprobe', mp3_path, '-hide_banner'], 1)
 
 
 
-mp3flag = 0
-# print(mp3info)
-streaminfo = [x for x in mp3info.split('\n') if "Stream" in x][0]
-prompt = ['ffmpeg',
-            '-y',
-            '-i', mp3_path.replace('.mp3', 'u.mp3'),
-            '-vn', 
-            '-map_metadata',
-            '-1', 
+    mp3flag = 0
+    # print(mp3info)
+    streaminfo = [x for x in mp3info.split('\n') if "Stream" in x][0]
+    prompt = ['ffmpeg',
+                '-y',
+                '-i', mp3_path.replace('.mp3', 'u.mp3'),
+                '-vn', 
+                '-map_metadata',
+                '-1', 
+                mp3_path]
+    print('normalizing')
+    # 检测是否需要转换格式、比特率
+    if "Audio: mp3" not in streaminfo:
+        print('  *Not an mp3 file!')
+        print('  *********************')
+
+        mp3flag = 1
+    kbps = int([x for x in streaminfo.split(',') if "kb/s" in x][0].split(' ')[1])
+    if kbps > 128:
+        print(f'  *bitrate {kbps} > 128kbps!')
+        print( '  *********************')
+        mp3flag = 1
+
+    if mp3flag:
+        prompt = prompt[:-1] + [
             '-c:a', 'libmp3lame',
             '-hide_banner',
-            mp3_path]
-print('normalizing')
-# 检测是否需要转换格式、比特率
-if "Audio: mp3" not in streaminfo:
-    print('  *Not an mp3 file!')
-    print('  *********************')
+            '-ar', '44100',
+            '-b:a', '128k', 
+            '-f', 'mp3',
+        ] +prompt[-1:]
+        print('  to convert to 128kbps mp3')
 
-    mp3flag = 1
-kbps = int([x for x in streaminfo.split(',') if "kb/s" in x][0].split(' ')[1])
-if kbps > 128:
-    print('  *bitrate > 128kbps!')
-    print('  *********************')
-    mp3flag = 1
-if mp3flag:
-    prompt.extend(['-b:a', '128k', '-f', 'mp3'])
+    else:
+        prompt = prompt[:-1] + [
+            '-c:a', 'copy',
+        ] +prompt[-1:]
+        print('  to rm metadata only')
 
-
-shutil.move(mp3_path, mp3_path.replace('.mp3', 'u.mp3')) #先将源文件重命名
-# print(subprocess.list2cmdline(['ffmpeg', '-i', mp3_path, '-vn', '-map-metadata','-1', '-ca', 'libmp3lame','-b:a128k', '-ext mp3', '-hide_banner',mp3_path]))
-runcom(prompt, 1)
-os.remove(mp3_path.replace('.mp3', 'u.mp3')) #删除源文件
-print('  normalized')
-print('-----------------------')
+    exist_rename(mp3_file, keep='oo') #防止覆盖原文件
+    shutil.move(mp3_path, mp3_path.replace('.mp3', 'u.mp3')) #先将源文件重命名
+    # print(subprocess.list2cmdline(['ffmpeg', '-i', mp3_path, '-vn', '-map-metadata','-1', '-ca', 'libmp3lame','-b:a128k', '-ext mp3', '-hide_banner',mp3_path]))
+    runcom(prompt, 1)
+    os.remove(mp3_path.replace('.mp3', 'u.mp3')) #删除源文件
+    print('  normalized')
+    print('-----------------------')
+else:
+    print('skipped normalizing')
+    print('-----------------------')
 # exit()
 
 # 文件上传
