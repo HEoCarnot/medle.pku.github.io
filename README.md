@@ -22,6 +22,8 @@ TOUHOU melody puzzle game (available in en/zh)
 
 这一套流程的完整范例可以参看DDC.yml。这个范例最终呈现为001.yml。
 
+Github上，点击Code->Local->Download ZIP下载整个档案，然后解压到一个地方。
+
 ### 部署
 
 1. 安装Node.js
