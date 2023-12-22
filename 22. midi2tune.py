@@ -215,11 +215,12 @@ zh-Hans:
 # title: 门前的妖怪小姑娘（門前の妖怪小娘）
 # desc:  《东方神灵庙》2面BOSS幽谷响子的主题曲。
 en:
-  title:
-  author:
-  desc:
+  title: a
+  author: b
+  desc: c
 
-curator: 
+
+curator: zzz
 """
 
 with open(directory+'unhandled/'+name+'.yml', 'w', encoding='utf-8') as f:
