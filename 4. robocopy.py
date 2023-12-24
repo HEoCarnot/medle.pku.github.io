@@ -11,8 +11,9 @@ from datetime import datetime
 
 name = argv[1]
 unzipflag = 0
+checkonly = 0
 directory = "./puzzles/"
-opts, args = getopt(argv[2:], "umd:r:", [])
+opts, args = getopt(argv[2:], "umd:r:c", [])
 
 zipexe = r'"D:\Program Files\7-Zip\7z.exe" '
 ymlcom = r'e -ir!*.yml -o.\puzzles\ -y E:\Downloads\Compressed\069.zip'
@@ -55,6 +56,33 @@ def refresh_name():
     yml_file = source_folder / (name + '.yml')
     mp3_file = source_folder_audio / (name + '.mp3')
 
+def startsftp():
+    # 设置SSH连接参数
+    ssh = paramiko.SSHClient()
+
+    # 从环境变量中获取敏感信息
+    private_key_path = os.getenv('SSH_PRIVATE_KEY_PATH')
+    password = os.getenv('SSH_PASSWORD')
+    hostname = os.getenv('FANTASY_HOSTNAME')
+    print('connecting')
+    private_key = paramiko.RSAKey(filename=private_key_path, password=password)
+
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh.connect(hostname=hostname, username='root', pkey=private_key)
+    sftp = ssh.open_sftp()
+    print('  connected')
+
+# def stopsftp()
+
+    return ssh, sftp
+
+def checkExistence(sftp, path):
+    try:
+        sftp.stat(path)
+        return True
+    except IOError:
+        return False
+
 
 refresh_name()
 
@@ -83,7 +111,29 @@ for opt, arg in opts:
         refresh_name()
     elif opt in ("-m", "--dontprocess"):
         dontprocess = 1
+    elif opt in ("-c", "--checkonly"):
+        checkonly = 1
 
+if checkonly:
+    target_yml_path = (target_folder / (name + '.yml')).as_posix()
+    target_mp3_path = (target_folder_audio / (name + '.mp3')).as_posix()
+    ssh, sftp = startsftp()
+    if checkExistence(sftp, target_yml_path):
+        print(f':){target_yml_path} exists')
+    else:
+        print(f':({target_yml_path} does not exist')
+
+    if checkExistence(sftp, target_mp3_path):
+        print(f':){target_mp3_path} exists')
+    else:
+        print(f':({target_mp3_path} does not exist')
+    
+    print('-----------------------')
+
+    sftp.close()
+    ssh.close()
+
+    exit()
 # print(name)
 
 # 解压文件
@@ -183,25 +233,28 @@ else:
     print('-----------------------')
 # exit()
 
-# 文件上传
-# 设置SSH连接参数
-ssh = paramiko.SSHClient()
+# # 文件上传
+# # 设置SSH连接参数
+# ssh = paramiko.SSHClient()
 
-# 从环境变量中获取敏感信息
-private_key_path = os.getenv('SSH_PRIVATE_KEY_PATH')
-password = os.getenv('SSH_PASSWORD')
-hostname = os.getenv('FANTASY_HOSTNAME')
-print('uploading')
-private_key = paramiko.RSAKey(filename=private_key_path, password=password)
+# # 从环境变量中获取敏感信息
+# private_key_path = os.getenv('SSH_PRIVATE_KEY_PATH')
+# password = os.getenv('SSH_PASSWORD')
+# hostname = os.getenv('FANTASY_HOSTNAME')
+# print('connecting')
+# private_key = paramiko.RSAKey(filename=private_key_path, password=password)
 
-ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-ssh.connect(hostname=hostname, username='root', pkey=private_key)
+# ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+# ssh.connect(hostname=hostname, username='root', pkey=private_key)
+# sftp = ssh.open_sftp()
+
+ssh, sftp = startsftp()
 
 target_yml_path = (target_folder / (name + '.yml')).as_posix()
 target_mp3_path = (target_folder_audio / (name + '.mp3')).as_posix()
 # 使用SFTP传输文件
 
-sftp = ssh.open_sftp()
+
 sftp.put(
     str(yml_file), 
     target_yml_path

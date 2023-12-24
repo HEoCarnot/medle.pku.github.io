@@ -7,52 +7,9 @@ yaml=YAML()
 yaml.default_flow_style = None
 from pathlib import Path
 from naming_mtds import *
+from pynput.keyboard import Controller
+import time
 # import os
-
-# mode=1: fold some of the notes
-# mode=2: fold completely as guided by your guidance
-# mode=3: fold all the same notes
-
-mode = 1
-name = '001'
-sign = ''
-directory = Path("./puzzles/")
-opts, args = getopt(argv[1:], "hm:n:d:s:", ["help", "mode=", "name=", "dir=", "sign="])
-helpdoc = """
-puzzle_maker -n <name> [-m <mode>] [-d <directory>]
-or: puzzle_maker --name=<name> [--mode=<mode>] [-dir=<directory>]
-    从 <directory>/unhandled/<name>.yml 读取未处理的谱面，生成 <directory>/<name>.yml
-    警告：会覆盖已有的 <directory>/<name>.yml！建议各种修改在unhandled/<name>.yml中进行!
-    -m, --mode: 1则只折叠部分音符（不想折叠也可以选1），2则完全按照自己所写的顺序折叠，3则在控制台输出每行后面添加了这个音的标记的谱面，但不输出文件
-        缺省为1
-    -d, --dir: 指定目录，缺省为./puzzles/。请确保unhandled文件夹存在
-    -s, --sign: 模式3中标记的后缀，缺省为''，例如- [7, 4] => - [7, 4, 7]；若-s a，则- [7, 4] => - [7, 4, 7a]
-"""
-for opt, arg in opts:
-    if opt in ("-h", "--help"):
-        print(helpdoc)
-        exit()
-    elif opt in ("-m", "--mode"):
-        mode = int(arg)
-    elif opt in ("-n", "--name"):
-        name = arg
-    elif opt in ("-d", "--dir"):
-        directory = arg
-    elif opt in ("-s", "--sign"):
-        sign = arg
-
-unhandled = directory/'unhandled'/(name+".yml")
-handled = directory/(name+".yml")
-
-try:
-    with open(unhandled, encoding='utf-8') as f:
-        result = yaml.load(f.read().replace('\t', ' '))
-        utune = result['tune']
-except FileNotFoundError as f:
-    print(f)
-    print("Current directory:", getcwd())
-    exit(5)
-
 
 def findEntry(register, x):
     for i in range(len(register)):
@@ -104,6 +61,69 @@ def correct_format(x):
     except:
         pass
     return x
+
+def getYml(yml_path):
+    try:
+        with open(yml_path, encoding='utf-8') as f:
+            result = yaml.load(f.read().replace('\t', ' '))
+            utune = result['tune']
+            return result, utune
+    except FileNotFoundError as f:
+        print(f)
+        print("Current directory:", getcwd())
+        exit(5)
+
+
+# mode=1: fold some of the notes
+# mode=2: fold completely as guided by your guidance
+# mode=3: fold all the same notes
+
+mode = 1
+name = '001'
+sign = ''
+typeonly = 0
+directory = Path("./puzzles/")
+opts, args = getopt(argv[1:], "hm:n:d:s:t", ["help", "mode=", "name=", "dir=", "sign=", "typeonly"])
+helpdoc = """
+puzzle_maker -n <name> [-m <mode>] [-d <directory>]
+or: puzzle_maker --name=<name> [--mode=<mode>] [-dir=<directory>]
+    从 <directory>/unhandled/<name>.yml 读取未处理的谱面，生成 <directory>/<name>.yml
+    警告：会覆盖已有的 <directory>/<name>.yml！建议各种修改在unhandled/<name>.yml中进行!
+    -m, --mode: 1则只折叠部分音符（不想折叠也可以选1），2则完全按照自己所写的顺序折叠，3则在控制台输出每行后面添加了这个音的标记的谱面，但不输出文件
+        缺省为1
+    -d, --dir: 指定目录，缺省为./puzzles/。请确保unhandled文件夹存在
+    -s, --sign: 模式3中标记的后缀，缺省为''，例如- [7, 4] => - [7, 4, 7]；若-s a，则- [7, 4] => - [7, 4, 7a]
+    -t, --typeonly: 运行后3秒，输入谜题的答案并且回车，不会生成文件（*小心耳朵*）
+"""
+for opt, arg in opts:
+    if opt in ("-h", "--help"):
+        print(helpdoc)
+        exit()
+    elif opt in ("-m", "--mode"):
+        mode = int(arg)
+    elif opt in ("-n", "--name"):
+        name = arg
+    elif opt in ("-d", "--dir"):
+        directory = arg
+    elif opt in ("-s", "--sign"):
+        sign = arg
+    elif opt in ("-t", "--typeonly"):
+        typeonly = 1
+
+unhandled = directory/'unhandled'/(name+".yml")
+handled = directory/(name+".yml")
+
+if typeonly:
+    _, utune = getYml(handled)
+    answer = ''.join([str(x[0])[0] for x in utune]) + '\n'
+    keyboard = Controller()
+    time.sleep(3)
+    keyboard.type(answer)
+    exit(0)
+
+
+result, utune = getYml(unhandled)
+
 
 if mode == 3:
     print(sign)
@@ -188,7 +208,7 @@ elif mode == 2:
             note.append(calcOffset(utune, posnotes[-1], len(utune)))
             # print(note)
         tune.append(note)
-          
+
 
 # print(tune)
 
