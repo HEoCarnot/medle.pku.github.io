@@ -1,0 +1,39 @@
+tune:
+  - [6-, 6, 50, -54]
+  - [3-, 8, 8, 8, 8, 8, 8, -46]
+  - [2-, 8, 8, 8, 8, 8, 8, -44]
+  - [7-, 6, 18, 6, -22]
+  - [1, 6, 26, 6, -30]
+  - [2, 6, 10]
+  - [3, 6, -46]
+  - [1, 12, -4]
+  - [2, 6, 2]
+  - [3, 4]
+  - [5, 4]
+  - [2, 4]
+  - [7-, 4]
+  - [1, 8]
+  - [5#, 8]
+  - [6, 16]
+
+
+
+
+tuneBeatDur: 15000/174
+tunePitchBase: Ab5
+metronome: [0, 4, 0, 4]
+
+tuneRevealBeatDur: 15000/174
+tuneRevealOffset: 15000/174*(16*4)
+
+zh-Hans:
+  title: 	Crazy Back Dancers（クレイジーバックダンサーズ）
+  author: Zun
+  desc: 	《东方天空璋》5面BOSS丁礼田舞&尔子田里乃的角色曲。（对于双声部的实验，正好也是两个角色的角色曲。）
+
+en:
+  title: baka
+  author: Zun
+  desc: bakabaka
+
+curator: 卡诺热机之梦
