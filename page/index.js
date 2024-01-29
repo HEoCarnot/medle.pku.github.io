@@ -11,32 +11,37 @@ const decode = (data) => {
 
 tune = decode(encodedTune);
 const N = tune.length;
-const DECO_8VA = 1;
-const DECO_8VB = 2;
+const DECO_8VA = 1; // 高八度标记
+const DECO_8VB = 2; // 低八度标记
 const DECO_SHARP = 4;
 const DECO_FLAT = 8;
 const DECO_APPO = 16;
+const DECO_8VAA = 32; // 高两个八度标记
+const DECO_8VBB = 64; // 低两个八度标记
 const MIN_PITCH = 24;
 const MAX_PITCH = 105;
-const dailyList = ['', 'EX', 'PH'];
-const tuneDecos = tune.map((note) => {
+const dailyList = ['', 'ED', 'EX', 'PH'];
+const tuneDecos = tune.map((note) => { 
   let a = note[0];
   let r = 0;
   if (a >= 100) {
     r |= DECO_APPO;
-    a -= 100;
+    a -= 1000;
     note[0] = a;
-  }
-  if (a < 1) r |= DECO_8VB;
-  if (a > 7) r |= DECO_8VA;
+  } 
+  // console.log(a);
+  if (a < 0.5 && a > -6.5) r |= DECO_8VB;
+  if (a < -6.5) r |= DECO_8VBB;
+  if (a > 7.5 && a < 14.5) r |= DECO_8VA;
+  if (a > 14.5) r |= DECO_8VAA;
   const i = Math.round(a);
   if (i !== a) {
     note[0] = i;
     r |= (a < i ? DECO_FLAT : DECO_SHARP);
-  }
+  } 
   return r;
 });
-const tuneAnswer = tune.map((x) => (x[0] + 6) % 7 + 1);
+const tuneAnswer = tune.map((x) => (x[0] + 13) % 7 + 1);
 
 const lowerLimit = 9
 const upperLimit = 10
@@ -121,7 +126,9 @@ const createRow = (decos, parentEl, rowIndex) => {
     fgTexts.push(el5b);
     // Decoration?
     if (decos[i] & DECO_8VA) div(el5a, ['tune-dot', 'ottava']);
+    if (decos[i] & DECO_8VAA) div(el5a, ['tune-dot-double-ottava-alta']);
     if (decos[i] & DECO_8VB) div(el5a, ['tune-dot', 'ottava-bassa']);
+    if (decos[i] & DECO_8VBB) div(el5a, ['tune-dot-double-ottava-bassa']);
     if (decos[i] & DECO_FLAT) el5a.classList.add('flat');
     if (decos[i] & DECO_SHARP) el5a.classList.add('sharp');
     if (decos[i] & DECO_APPO) {
@@ -257,14 +264,16 @@ const notesReachable = {};
 const octaves = [0];
 const accidentals = [0];
 if (!tuneDecos.every((r) => (r & DECO_8VA) === 0)) octaves.push(12);
+if (!tuneDecos.every((r) => (r & DECO_8VAA) === 0)) octaves.push(24);
 if (!tuneDecos.every((r) => (r & DECO_8VB) === 0)) octaves.push(-12);
+if (!tuneDecos.every((r) => (r & DECO_8VBB) === 0)) octaves.push(-24);
 if (!tuneDecos.every((r) => (r & DECO_SHARP) === 0)) accidentals.push(1);
 if (!tuneDecos.every((r) => (r & DECO_FLAT) === 0)) accidentals.push(-1);
 for (const a of octaves)
   for (const b of accidentals)
     for (const c of SCALE)
       notesReachable[a + b + c] = true;
-for (let i = -12; i <= 24; i++)
+for (let i = -24; i <= 36; i++)
   if (notesReachable[i])
     paths.push([
       `/static/samples/pf-${tunePitchBase + i}.ogg`,
@@ -280,6 +289,7 @@ paths.push([
   `/static/samples/pf-60.ogg`,
   `/static/samples/pf-60.mp3`,
 ]);
+
 
 const preloadSounds = (callback) => {
   let count = 0;
@@ -576,7 +586,9 @@ const startGame = (savedGuesses = []) => {
     setTimeout(() => {
       const pitch = tunePitchBase + SCALE[solf - 1] +
         ((tuneDecos[pos] & DECO_8VA) ? 12 :
-          (tuneDecos[pos] & DECO_8VB) ? -12 : 0) +
+          (tuneDecos[pos] & DECO_8VB) ? -12 : 
+            (tuneDecos[pos] & DECO_8VAA) ? 24 :
+              (tuneDecos[pos] & DECO_8VBB) ? -24 : 0) +
         ((tuneDecos[pos] & DECO_SHARP) ? 1 :
           (tuneDecos[pos] & DECO_FLAT) ? -1 : 0);
       stopPfSound();
@@ -857,6 +869,56 @@ const startGame = (savedGuesses = []) => {
       r.serrated(true);
       attRows.push(r);
     }
+
+    // 修改相关元素
+    if (finished) {
+      let element, rateeee, alreadyHave, limits, tries, bonus;
+      alreadyHave = false;
+      limits = succeeded ? attInputs.length : attemptsLimit;
+      tries = succeeded ? 1 : 0;
+      rateeee = Math.random();
+      if (succeeded && attResults.length === 1) {
+        rateeee = 1000000 - 1000000 / attemptsLimit * rateeee / 8
+        bonus = 10 * Math.round(rateeee);
+      }
+      else if (succeeded) {
+        
+        rateeee = 1000000 / attemptsLimit * (rateeee-0.5) / 4 + 1000000 / attemptsLimit * (attemptsLimit - attResults.length);
+        bonus = 10 * Math.round(rateeee);
+      }
+      else
+        bonus = 'Failed';
+
+      element = document.getElementById("limits");
+      if (element) {
+        alreadyHave = true;
+        document.getElementById('limits').innerHTML = limits;
+      }
+
+      element = document.getElementById("tries");
+      if (element) {
+        alreadyHave = true;
+        document.getElementById('tries').innerHTML = tries;
+      }
+
+      element = document.getElementById("bonus");
+      if (element) {
+        alreadyHave = true;
+        document.getElementById('bonus').innerHTML = bonus;
+      }
+
+      if (!alreadyHave) {
+        // 获取元素
+        let element = document.getElementById('spell-stat');
+
+        // 修改元素的内容
+        if (element) {
+          element.innerHTML = "<sup>Bonus " + bonus +
+          " History " + tries + "/" + limits + "</sup></div>";
+        }
+      }
+    }
+
     if (!revealSilence)
       setTimeout(async () => {
         let currFinished = (attResults.length === attemptsLimit || succeeded);
@@ -1027,8 +1089,10 @@ const startGame = (savedGuesses = []) => {
           let timer = setTimeout(() => {
             const note = document.createElement('div');
             const pitch = tunePitchBase + SCALE[tuneAnswer[i] - 1] +
-              ((tuneDecos[i] & DECO_8VA) ? 12 :
-                (tuneDecos[i] & DECO_8VB) ? -12 : 0) +
+            ((tuneDecos[i] & DECO_8VA) ? 12 :
+              (tuneDecos[i] & DECO_8VB) ? -12 : 
+                (tuneDecos[i] & DECO_8VAA) ? 24 :
+                  (tuneDecos[i] & DECO_8VBB) ? -24 : 0) +
               ((tuneDecos[i] & DECO_SHARP) ? 1 :
                 (tuneDecos[i] & DECO_FLAT) ? -1 : 0);
             const length = (sortList[p + 1][0] - sortList[p][0]) * tuneRevealBeatDur;
@@ -1407,8 +1471,8 @@ if (isDaily) {
     let yd = getPuzzleId(y);
     if (xd[0] > yd[0]) return 1;
     if (xd[0] < yd[0]) return -1;
-    if (xd[1] > yd[1]) return 1;
-    if (xd[1] < yd[1]) return -1;
+    if (dailyList.indexOf(xd[1]) > dailyList.indexOf(yd[1])) return 1;
+    if (dailyList.indexOf(xd[1]) < dailyList.indexOf(yd[1])) return -1;
     return 0;
   })
   for (let id of availablePuzzleIds) {
@@ -1416,10 +1480,21 @@ if (isDaily) {
   }
   let decomposition = getPuzzleId(puzzleId);
   let id = decomposition[0].toString().padStart(3, '0');
+
+  // 获得今日的题目
+  let stringsWithId = availablePuzzleIds.filter(str => str.includes(id));
+  // 获得今日题目的后缀的索引
+  let suffixIndices = stringsWithId.map(str => dailyList.indexOf(str.substring(3)));
+
   let suffix = undefined;
   let idx = dailyList.indexOf(decomposition[1]);
-  if (idx !== -1 && idx !== dailyList.length - 1)
-    suffix = dailyList[idx + 1];
+  // idx存在，且小于最后一个后缀的索引
+  console.log(idx, suffixIndices[suffixIndices.length - 1])
+  if (idx !== -1 && idx < suffixIndices[suffixIndices.length - 1]){
+    // 指向下一个后缀的索引
+    idx = suffixIndices.findIndex(x => x > idx);
+    suffix = dailyList[suffixIndices[idx]];
+  }
   if (suffix !== undefined && availablePuzzleIds.indexOf(id + suffix) != -1) {
     let container = document.getElementById('next-puzzle-container');
     container.classList.remove('hidden')
