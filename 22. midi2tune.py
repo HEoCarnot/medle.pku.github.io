@@ -214,10 +214,10 @@ tunename = """
 zh-Hans:
   title:  （）
   author: ZUN
-  desc:   《》。
+  desc:   《》。<a href="https://music.163.com/#/song?id=">访问网易云链接</a>
 # 示例：
 # title: 门前的妖怪小姑娘（門前の妖怪小娘）
-# desc:  《东方神灵庙》2面BOSS幽谷响子的主题曲。
+# desc:  《东方神灵庙》2面BOSS幽谷响子的主题曲。<a href="https://music.163.com/#/song?id=509011">访问网易云链接</a>
 en:
   title: a
   author: b

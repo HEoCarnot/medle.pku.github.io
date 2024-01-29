@@ -129,6 +129,8 @@ if mode == 3:
     print(sign)
     for x in utune:
         y = correct_format(str(x[0])+sign)
+        while len(x) > 2:
+            x.pop()
         x.append(y)
     output = {'tune': utune}
     yaml.dump(output, stdout)

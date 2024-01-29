@@ -8,18 +8,20 @@ import shutil
 import chardet
 from pathlib import Path
 from datetime import datetime
+from naming_mtds import *
 
 name = argv[1]
 unzipflag = 0
 checkonly = 0
 directory = "./puzzles/"
-opts, args = getopt(argv[2:], "umd:r:c", [])
+opts, args = getopt(argv[2:], "umd:r:cs", [])
 
 zipexe = r'"D:\Program Files\7-Zip\7z.exe" '
 ymlcom = r'e -ir!*.yml -o.\puzzles\ -y E:\Downloads\Compressed\069.zip'
 mp3com = r'e -ir!*.mp3 -o.\puzzles\reveal -y E:\Downloads\Compressed\069.zip'
 no_mp3 = 0
 dontprocess = 0
+skipmusic = 0
 
 # 设置源文件路径和目标路径
 source_folder = Path('./puzzles/')
@@ -47,7 +49,7 @@ def runcom(com, mute=0):
 #     assert 'Everything is Ok' in out, out
 # def okffmpeg(out):
 
-from naming_mtds import *
+
 # 刷新文件名。
 def refresh_name():
     global name
@@ -64,7 +66,7 @@ def startsftp():
     private_key_path = os.getenv('SSH_PRIVATE_KEY_PATH')
     password = os.getenv('SSH_PASSWORD')
     hostname = os.getenv('FANTASY_HOSTNAME')
-    print('connecting')
+    print('connecting...')
     private_key = paramiko.RSAKey(filename=private_key_path, password=password)
 
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -84,16 +86,23 @@ def checkExistence(sftp, path):
         return False
 
 
+
 refresh_name()
+
+if '.' in name:
+    unzipflag = 1
+    print('unzip flag set')
+    print('-----------------------')
 
 # 获取命令行参数
 for opt, arg in opts:
-    if opt in ("-u", "--unzip"):
-        unzipflag = 1
-    elif opt in ("-d", "--dir"):
+    # if opt in ("-u", "--unzip"):
+    # if '.' in name:
+    #     unzipflag = 1
+    if opt in ("-d", "--dir"):
         directory = arg
     elif opt in ("-r", "--rename"):
-        print('renaming')
+        print('renaming...')
         rename = arg
         new_yml_file = source_folder / (rename + '.yml')
         new_mp3_file = source_folder_audio / (rename + '.mp3')
@@ -113,32 +122,37 @@ for opt, arg in opts:
         dontprocess = 1
     elif opt in ("-c", "--checkonly"):
         checkonly = 1
+    elif opt in ("-s", "--skipmusic"):
+        skipmusic = 1
 
 if checkonly:
     target_yml_path = (target_folder / (name + '.yml')).as_posix()
     target_mp3_path = (target_folder_audio / (name + '.mp3')).as_posix()
-    ssh, sftp = startsftp()
-    if checkExistence(sftp, target_yml_path):
-        print(f':){target_yml_path} exists')
-    else:
-        print(f':({target_yml_path} does not exist')
+    # ssh, sftp = startsftp()
+    with SFTPConnection() as sftp:
+        print('checking...')
+        if checkExistence(sftp, target_yml_path):
+            print(f':) {target_yml_path} exists')
+        else:
+            print(f':( {target_yml_path} does not exist')
 
-    if checkExistence(sftp, target_mp3_path):
-        print(f':){target_mp3_path} exists')
-    else:
-        print(f':({target_mp3_path} does not exist')
-    
-    print('-----------------------')
+        if checkExistence(sftp, target_mp3_path):
+            print(f':) {target_mp3_path} exists')
+        else:
+            print(f':( {target_mp3_path} does not exist')
+        
+        # print('-----------------------')
 
-    sftp.close()
-    ssh.close()
+    # sftp.close()
+    # ssh.close()
 
     exit()
 # print(name)
 
+print(unzipflag)
 # 解压文件
 if unzipflag:
-    print('unzipping')
+    print('unzipping...')
     shortname = name.split('.')[0]
     old_yml_file = source_folder / (shortname + '.yml')
     old_mp3_file = source_folder_audio / (shortname + '.mp3')
@@ -192,7 +206,7 @@ if not dontprocess:
                 '-map_metadata',
                 '-1', 
                 mp3_path]
-    print('normalizing')
+    print('normalizing...')
     # 检测是否需要转换格式、比特率
     if "Audio: mp3" not in streaminfo:
         print('  *Not an mp3 file!')
@@ -229,7 +243,7 @@ if not dontprocess:
     print('  normalized')
     print('-----------------------')
 else:
-    print('skipped normalizing')
+    print('skipped normalization')
     print('-----------------------')
 # exit()
 
@@ -241,39 +255,43 @@ else:
 # private_key_path = os.getenv('SSH_PRIVATE_KEY_PATH')
 # password = os.getenv('SSH_PASSWORD')
 # hostname = os.getenv('FANTASY_HOSTNAME')
-# print('connecting')
+# print('connecting...')
 # private_key = paramiko.RSAKey(filename=private_key_path, password=password)
 
 # ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 # ssh.connect(hostname=hostname, username='root', pkey=private_key)
 # sftp = ssh.open_sftp()
 
-ssh, sftp = startsftp()
+# ssh, sftp = startsftp()
 
 target_yml_path = (target_folder / (name + '.yml')).as_posix()
 target_mp3_path = (target_folder_audio / (name + '.mp3')).as_posix()
 # 使用SFTP传输文件
 
+with SFTPConnection() as sftp:
+    print('uploading...')
 
-sftp.put(
-    str(yml_file), 
-    target_yml_path
-)  # 目标文件名可以按需更改
-sftp.put(
-    str(mp3_file), 
-    target_mp3_path
-)  # 目标文件名可以按需更改
-print('  uploaded succesfully')
-print('    '+
-    str(yml_file), 
-    '\n---> ', target_yml_path,
-)
-print('    '+
-    str(mp3_file), 
-    '\n---> ', target_mp3_path
-)
-print('-----------------------')
-sftp.close()
+    sftp.put(
+        str(yml_file), 
+        target_yml_path
+    )  # 目标文件名可以按需更改
+    if not skipmusic:
+        sftp.put(
+            str(mp3_file), 
+            target_mp3_path
+        )  # 目标文件名可以按需更改
+    print('  uploaded succesfully')
+    print('    '+
+        str(yml_file), 
+        '\n---> ', target_yml_path,
+    )
+    if not skipmusic:
+        print('    '+
+            str(mp3_file), 
+            '\n---> ', target_mp3_path
+        )
+    # print('-----------------------')
+# sftp.close()
 
-# 关闭SSH连接
-ssh.close()
+# # 关闭SSH连接
+# ssh.close()
