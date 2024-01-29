@@ -4,13 +4,13 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url(/medle/static/VarelaRound.woff2) format('woff2');
+  src: url(/backend/medle/static/VarelaRound.woff2) format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 @font-face {
   font-family: 'Medle Icons Collection - 220309';
-  src: url(/medle/static/icons.woff2) format('woff2');
+  src: url(/backend/medle/static/icons.woff2) format('woff2');
 }
 
 html, body {
@@ -18,11 +18,19 @@ html, body {
   margin: 0;
   overflow: hidden;
   color: #222;
-  background: #fdfdfd;
+  /* background: #fdfdfd; */
 }
 * {
   font-family: "Varela Round", sans-serif;
   user-select: none;
+}
+
+#medle-container span {
+    font-family: "Varela Round", sans-serif;
+}
+
+#medle-container span.iconfont {
+    font-family: 'Medle Icons Collection - 220309';
 }
 .iconfont {
   font-family: 'Medle Icons Collection - 220309';
@@ -49,19 +57,21 @@ body.dark {
   top: 18px;
 }
 
-#container {
-  min-height: 100%;
-  margin: 0 auto;
+#medle-container {
+  height: calc(100vh - 140rem / 16 - 40px - 0.667px - 34px - 40px);
+  margin: 7px auto 27px;
   width: 100%;
   max-width: 80vh;
   position: relative;
+  background: white;
+  padding: var(--padding-ud) var(--padding-lr);
 }
 
 #icon-btns-container {
   position: absolute;
-  top: 16px;
+  top: calc(16px + var(--padding-lr));
   padding: 0 8px;
-  width: calc(100% - 16px);
+  width: calc(100% - 16px - var(--padding-lr) * 2);
 }
 #icon-btns-container > div {
   width: 32px;
@@ -612,7 +622,7 @@ body.nota-aikin .fg > .small-bubble.solf-7 > div.content:before { content: '\f04
 #start-btn-container {
   position: absolute;
   top: 30%;
-  width: 100%;
+  width: calc(100% - var(--padding-lr) * 2);
 }
 #start-btn-container.no-pointer {
   pointer-events: none;
@@ -651,7 +661,7 @@ body.nota-aikin .fg > .small-bubble.solf-7 > div.content:before { content: '\f04
   margin-top: 18px;
 }
 #btns-container {
-  width: 100%;
+  width: calc(100% - var(--padding-lr) * 2);
   position: absolute;
   bottom: 12px;
 }
@@ -693,14 +703,14 @@ body.nota-aikin .fg > .small-bubble.solf-7 > div.content:before { content: '\f04
 }
 .modal {
   z-index: 991;
-  position: absolute;
-  top: 15%;
+  position: fixed;
+  top: 5%;
   left: 10%;
-  bottom: 15%;
+  bottom: 5%;
   right: 10%;
   background: #fdfdfd;
   border-radius: 8px;
-  padding: 20px 24px;
+  padding: 20px 3%;
   font-size: 15px;
   overflow: scroll;
   opacity: 1;
@@ -976,6 +986,8 @@ body.dark a.puzzle-link.fail {
 * {
   scrollbar-color: #ccc #ddd;
   scrollbar-width: thin;
+--padding-lr: 20px;
+--padding-ud: 20px;
 }
 
 body.dark *::-webkit-scrollbar:hover{

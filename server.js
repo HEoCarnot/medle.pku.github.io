@@ -117,7 +117,7 @@ const encodeData = (data) => {
 // const debug = (Deno.env.get('DEBUG') === '1');
 const debug = false;
 
-const indexHtmlContents = new TextDecoder().decode(fs.readFileSync('page/index.html'));
+const indexHtmlContents = new TextDecoder().decode(fs.readFileSync('page/index_origin.html'));
 const indexTemplate = etaCompile(indexHtmlContents);
 
 const epoch = new Date('2023-10-14T16:00:00Z');
@@ -277,7 +277,9 @@ const servePuzzle = async (req, puzzleId, checkToday) => {
   puzzleContents.currentTime = Date.now();
 
   log(`puzzle ${puzzleId} ${analytics(req)}`);
+  log(puzzleContents.tune);
   puzzleContents.tune = encodeData(puzzleContents.tune);
+  log(puzzleContents.tune);
   puzzleContents.serverTime = serverStartTime.toUTCString();
   const pageContents = indexTemplate(puzzleContents, etaConfig);
   return Response(pageContents, {

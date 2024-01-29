@@ -227,7 +227,7 @@ const sendAnalytics = async (contents) => {
   const form = new FormData();
   form.append('puzzle', puzzleId);
   form.append('t', contents);
-  let req = await fetch('/medle/analytics', {
+  let req = await fetch('/backend/medle/analytics', {
     method: 'POST',
     body: form
   });
@@ -237,9 +237,9 @@ const sendAnalytics = async (contents) => {
 
 const audios = {};
 const paths = [
-  ['/medle/static/samples/pop.wav'],
-  ['/medle/static/samples/beat.wav'],
-  ['/medle/static/samples/strongBeat.wav']
+  ['/backend/medle/static/samples/pop.wav'],
+  ['/backend/medle/static/samples/beat.wav'],
+  ['/backend/medle/static/samples/strongBeat.wav']
 ];
 
 const notesReachable = {};
@@ -256,18 +256,18 @@ for (const a of octaves)
 for (let i = -12; i <= 24; i++)
   if (notesReachable[i])
     paths.push([
-      `/medle/static/samples/pf-${tunePitchBase + i}.ogg`,
-      `/medle/static/samples/pf-${tunePitchBase + i}.mp3`,
+      `/backend/medle/static/samples/pf-${tunePitchBase + i}.ogg`,
+      `/backend/medle/static/samples/pf-${tunePitchBase + i}.mp3`,
     ]);
 
 // Music offset adjust
 paths.push([
-  `/medle/static/samples/pf-72.ogg`,
-  `/medle/static/samples/pf-72.mp3`,
+  `/backend/medle/static/samples/pf-72.ogg`,
+  `/backend/medle/static/samples/pf-72.mp3`,
 ]);
 paths.push([
-  `/medle/static/samples/pf-60.ogg`,
-  `/medle/static/samples/pf-60.mp3`,
+  `/backend/medle/static/samples/pf-60.ogg`,
+  `/backend/medle/static/samples/pf-60.mp3`,
 ]);
 
 const preloadSounds = (callback) => {
@@ -752,7 +752,7 @@ const startGame = () => {
     const rect = btnDelBg.getBoundingClientRect();
     const vw = document.body.clientWidth;
     const w = vw - 2 * (vw - rect.right);
-    btnConfirmBg.style.width = (w / 1.2) + 'px'
+    // btnConfirmBg.style.width = (w / 1.2) + 'px'
   };
   window.addEventListener('resize', recalcConfirmWidth);
 
@@ -848,7 +848,7 @@ const startGame = () => {
       attInputs.push(input);
       attResults.push(result);
       succeeded = data.succeeded
-      const finished = (attResults.length === attemptsLimit || succeeded);
+      finished = data.finished;
       let newRow;
       if (!finished) {
         newRow = r = createRow(tuneDecos, listContainer, attResults.length);
@@ -915,7 +915,7 @@ const startGame = () => {
     text: () => {
       btnShare.classList.add('copied');
       const prefix = `恐怖的回忆 PH ${puzzleId} ${succeeded ? attResults.length : 'X'}/${attemptsLimit}\n`;
-      const suffix = `/medle/` +
+      const suffix = `/backend/medle/` +
         (puzzleId === todayDaily ? '' : puzzleId);
       return prefix +
         attResults.map((result) => result.map((r) => {
@@ -1170,7 +1170,7 @@ const startGame = () => {
     if (!answerAudioLoading) {
       answerAudioLoading = true;
       answerAudio = new Howl({
-        src: [`/medle/reveal/${puzzleId}.mp3`]
+        src: [`/backend/medle/reveal/${puzzleId}.mp3`]
       });
       answerAudio.once('load', () => {
         btnPlay.classList.remove('disabled');
@@ -1262,7 +1262,7 @@ const startGame = () => {
     attResults.push(result);
     succeeded = history.succeeded
     const finished = history.finished;
-    const currFinished = !revealSilence || result.every(num => num === 2)
+    const currFinished = result.every(num => num === 2)
     let newRow;
     if (!currFinished) {
       newRow = r = createRow(tuneDecos, listContainer, attResults.length);
@@ -1283,22 +1283,7 @@ const startGame = () => {
             answerRow.fill(i, tuneAnswer[i]);
           answerRow.serrated(true);
 
-          // Send analytics
           let visits = statVisits;
-          // if (localStorage.getItem("problemStatus-" + puzzleId) === "0") {
-          //   if (!unknownStatus) {
-          //     // after update but havn't added into database
-          //     visits = await sendAnalytics('fin ' + (succeeded ? attInputs.length : attemptsLimit + 1));
-          //   }
-          //   else
-          //     visits = await sendAnalytics('fetch');
-          //   const problemStatus = (succeeded ? String(attInputs.length) : 'fail');
-          //   localStorage.setItem("problemStatus-" + puzzleId, problemStatus);
-          //   addStatistics(problemStatus);
-          // }
-          // else
-          //   visits = await sendAnalytics('fetch');
-          // Reveal answer
           window.revealAnswer(visits);
           showButtons(true);
         } else {
@@ -1423,7 +1408,7 @@ const puzzleLink = (index, showDate = true) => {
       `<span data-t='hidden'></span>` +
       ` — <strong>${index}</strong>`;
   let stat = allPuzzleStatus['problemStatus-' + index];
-  if (stat !== null && stat !== "0" && index !== puzzleId) {
+  if (stat !== void 0 && stat !== "0" && index !== puzzleId) {
     if (stat === 'fail')
       a.classList.add('fail');
     else
