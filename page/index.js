@@ -23,9 +23,11 @@ const DECO_8VB = 2;
 const DECO_SHARP = 4;
 const DECO_FLAT = 8;
 const DECO_APPO = 16;
+const DECO_8VAA = 32; // 高两个八度标记
+const DECO_8VBB = 64; // 低两个八度标记
 const MIN_PITCH = 24;
 const MAX_PITCH = 105;
-const dailyList = ['', 'EX', 'PH'];
+const dailyList = ['', 'ED', 'EX', 'PH'];
 
 const upperLimit = 6;
 const lowerLimit = 5;
@@ -104,7 +106,9 @@ const createRow = (decos, parentEl, rowIndex) => {
     fgTexts.push(el5b);
     // Decoration?
     if (decos[i] & DECO_8VA) div(el5a, ['tune-dot', 'ottava']);
+    if (decos[i] & DECO_8VAA) div(el5a, ['tune-dot-double-ottava-alta']);
     if (decos[i] & DECO_8VB) div(el5a, ['tune-dot', 'ottava-bassa']);
+    if (decos[i] & DECO_8VBB) div(el5a, ['tune-dot-double-ottava-bassa']);
     if (decos[i] & DECO_FLAT) el5a.classList.add('flat');
     if (decos[i] & DECO_SHARP) el5a.classList.add('sharp');
     if (decos[i] & DECO_APPO) {
@@ -246,14 +250,16 @@ const notesReachable = {};
 const octaves = [0];
 const accidentals = [0];
 if (!tuneDecos.every((r) => (r & DECO_8VA) === 0)) octaves.push(12);
+if (!tuneDecos.every((r) => (r & DECO_8VAA) === 0)) octaves.push(24);
 if (!tuneDecos.every((r) => (r & DECO_8VB) === 0)) octaves.push(-12);
+if (!tuneDecos.every((r) => (r & DECO_8VBB) === 0)) octaves.push(-24);
 if (!tuneDecos.every((r) => (r & DECO_SHARP) === 0)) accidentals.push(1);
 if (!tuneDecos.every((r) => (r & DECO_FLAT) === 0)) accidentals.push(-1);
 for (const a of octaves)
   for (const b of accidentals)
     for (const c of SCALE)
       notesReachable[a + b + c] = true;
-for (let i = -12; i <= 24; i++)
+for (let i = -24; i <= 36; i++)
   if (notesReachable[i])
     paths.push([
       `/backend/medle/static/samples/pf-${tunePitchBase + i}.ogg`,
@@ -269,6 +275,7 @@ paths.push([
   `/backend/medle/static/samples/pf-60.ogg`,
   `/backend/medle/static/samples/pf-60.mp3`,
 ]);
+
 
 const preloadSounds = (callback) => {
   let count = 0;
@@ -571,7 +578,9 @@ const startGame = () => {
     setTimeout(() => {
       const pitch = tunePitchBase + SCALE[solf - 1] +
         ((tuneDecos[pos] & DECO_8VA) ? 12 :
-          (tuneDecos[pos] & DECO_8VB) ? -12 : 0) +
+          (tuneDecos[pos] & DECO_8VB) ? -12 : 
+            (tuneDecos[pos] & DECO_8VAA) ? 24 :
+              (tuneDecos[pos] & DECO_8VBB) ? -24 : 0) +
         ((tuneDecos[pos] & DECO_SHARP) ? 1 :
           (tuneDecos[pos] & DECO_FLAT) ? -1 : 0);
       stopPfSound();
@@ -856,6 +865,7 @@ const startGame = () => {
         r.serrated(true);
         attRows.push(r);
       }
+      
       if (!revealSilence)
         setTimeout(async () => {
           let currFinished = (attResults.length === attemptsLimit || succeeded);
@@ -907,6 +917,106 @@ const startGame = () => {
     }).catch((xhr, status, error) => {
       console.error(error)
     })
+    attInputs.push(input);
+    attResults.push(result);
+    succeeded = result.every((r) => r === 2);
+    const finished = (attResults.length === attemptsLimit || succeeded);
+    let newRow;
+    if (!finished) {
+      newRow = r = createRow(tuneDecos, listContainer, attResults.length);
+      r.show(false);
+      r.serrated(true);
+      attRows.push(r);
+    }
+
+    // 修改相关元素
+    if (finished) {
+      let element, rateeee, alreadyHave, limits, tries, bonus;
+      alreadyHave = false;
+      limits = succeeded ? attInputs.length : attemptsLimit;
+      tries = succeeded ? 1 : 0;
+      rateeee = Math.random();
+      if (succeeded && attResults.length === 1) {
+        rateeee = 1000000 - 1000000 / attemptsLimit * rateeee / 8
+        bonus = 10 * Math.round(rateeee);
+      }
+      else if (succeeded) {
+        
+        rateeee = 1000000 / attemptsLimit * (rateeee-0.5) / 4 + 1000000 / attemptsLimit * (attemptsLimit - attResults.length);
+        bonus = 10 * Math.round(rateeee);
+      }
+      else
+        bonus = 'Failed';
+
+      element = document.getElementById("limits");
+      if (element) {
+        alreadyHave = true;
+        document.getElementById('limits').innerHTML = limits;
+      }
+
+      element = document.getElementById("tries");
+      if (element) {
+        alreadyHave = true;
+        document.getElementById('tries').innerHTML = tries;
+      }
+
+      element = document.getElementById("bonus");
+      if (element) {
+        alreadyHave = true;
+        document.getElementById('bonus').innerHTML = bonus;
+      }
+
+      if (!alreadyHave) {
+        // 获取元素
+        let element = document.getElementById('spell-stat');
+
+        // 修改元素的内容
+        if (element) {
+          element.innerHTML = "<sup>Bonus " + bonus +
+          " History " + tries + "/" + limits + "</sup></div>";
+        }
+      }
+    }
+
+    if (!revealSilence)
+      setTimeout(async () => {
+        let currFinished = (attResults.length === attemptsLimit || succeeded);
+        if (currFinished) {
+          if (haveRevealed)
+            return;
+          haveRevealed = true;
+          // Send analytics
+          let visits = [];
+          if (!silence) {
+            // sendAnalytics('fin ' + attInputs.map((a) => a.join('')).join(','));
+            visits = await sendAnalytics('fin ' + (succeeded ? attInputs.length : attemptsLimit + 1));
+            const problemStatus = (succeeded ? String(attInputs.length) : 'fail');
+            localStorage.setItem("problemStatus-" + puzzleId, problemStatus);
+            addStatistics(problemStatus);
+          }
+          else {
+            if (localStorage.getItem("problemStatus-" + puzzleId) === "0") {
+              if (!unknownStatus) {
+                // after update but havn't added into database
+                visits = await sendAnalytics('fin ' + (succeeded ? attInputs.length : attemptsLimit + 1));
+              }
+              else
+                visits = await sendAnalytics('fetch');
+              const problemStatus = (succeeded ? String(attInputs.length) : 'fail');
+              localStorage.setItem("problemStatus-" + puzzleId, problemStatus);
+              addStatistics(problemStatus);
+            }
+            else
+              visits = await sendAnalytics('fetch');
+          }
+          // Reveal answer
+          window.revealAnswer(visits);
+          showButtons(true);
+        } else {
+          for (let i = 0; i < N; i++) newRow.clear(i);
+          showButtons(true);
+        }
+      }, (silence ? 100 + input.length * notePopSpeed : 500 + (tuneDur + metronomeOffset()) * tuneBeatDur + 1000 + Math.abs(musicOffset)));
   };
 
 
@@ -1033,8 +1143,10 @@ const startGame = () => {
           let timer = setTimeout(() => {
             const note = document.createElement('div');
             const pitch = tunePitchBase + SCALE[tuneAnswer[i] - 1] +
-              ((tuneDecos[i] & DECO_8VA) ? 12 :
-                (tuneDecos[i] & DECO_8VB) ? -12 : 0) +
+            ((tuneDecos[i] & DECO_8VA) ? 12 :
+              (tuneDecos[i] & DECO_8VB) ? -12 : 
+                (tuneDecos[i] & DECO_8VAA) ? 24 :
+                  (tuneDecos[i] & DECO_8VBB) ? -24 : 0) +
               ((tuneDecos[i] & DECO_SHARP) ? 1 :
                 (tuneDecos[i] & DECO_FLAT) ? -1 : 0);
             const length = (sortList[p + 1][0] - sortList[p][0]) * tuneRevealBeatDur;
@@ -1465,8 +1577,8 @@ if (isDaily) {
     let yd = getPuzzleId(y);
     if (xd[0] > yd[0]) return 1;
     if (xd[0] < yd[0]) return -1;
-    if (xd[1] > yd[1]) return 1;
-    if (xd[1] < yd[1]) return -1;
+    if (dailyList.indexOf(xd[1]) > dailyList.indexOf(yd[1])) return 1;
+    if (dailyList.indexOf(xd[1]) < dailyList.indexOf(yd[1])) return -1;
     return 0;
   })
   for (let id of availablePuzzleIds) {
@@ -1474,10 +1586,21 @@ if (isDaily) {
   }
   let decomposition = getPuzzleId(puzzleId);
   let id = decomposition[0].toString().padStart(3, '0');
+
+  // 获得今日的题目
+  let stringsWithId = availablePuzzleIds.filter(str => str.includes(id));
+  // 获得今日题目的后缀的索引
+  let suffixIndices = stringsWithId.map(str => dailyList.indexOf(str.substring(3)));
+
   let suffix = undefined;
   let idx = dailyList.indexOf(decomposition[1]);
-  if (idx !== -1 && idx !== dailyList.length - 1)
-    suffix = dailyList[idx + 1];
+  // idx存在，且小于最后一个后缀的索引
+  console.log(idx, suffixIndices[suffixIndices.length - 1])
+  if (idx !== -1 && idx < suffixIndices[suffixIndices.length - 1]){
+    // 指向下一个后缀的索引
+    idx = suffixIndices.findIndex(x => x > idx);
+    suffix = dailyList[suffixIndices[idx]];
+  }
   if (suffix !== undefined && availablePuzzleIds.indexOf(id + suffix) != -1) {
     let container = document.getElementById('next-puzzle-container');
     container.classList.remove('hidden')

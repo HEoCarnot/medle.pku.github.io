@@ -484,6 +484,88 @@ body.dark .tune-dot {
   border-color: #999;
 }
 
+.tune-dot-double-ottava-bassa::before,
+.tune-dot-double-ottava-bassa::after {
+  content: "";
+  display: block;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  position: absolute;
+  left: 50%;
+  background: #222;
+  transform: translate(-50%, 0);
+  opacity: 1;
+  border: 1px solid transparent;
+  transition: opacity 0.5s ease, transform 0.5s ease, background-color 0.5s ease, border-color 0.5s ease;
+}
+
+.tune-dot-double-ottava-bassa::before {
+  bottom: -8%;
+}
+
+.tune-dot-double-ottava-bassa::after {
+  bottom: -18%;
+}
+
+body.dark .tune-dot-double-ottava-bassa::before,
+body.dark .tune-dot-double-ottava-bassa::after {
+  background: #fdfdfd;
+}
+
+.list .bubble.hidden > div > div.tune-dot-double-ottava-bassa::before,
+.list .bubble.hidden > div > div.tune-dot-double-ottava-bassa::after {
+  opacity: 0;
+  transform: translate(-50%, 0) scale(0.5);
+}
+
+.list .bubble.outline > div > div.tune-dot-double-ottava-bassa::before,
+.list .bubble.outline > div > div.tune-dot-double-ottava-bassa::after {
+  background-color: transparent;
+  border-color: #999;
+}
+
+.tune-dot-double-ottava-alta::before,
+.tune-dot-double-ottava-alta::after {
+  content: "";
+  display: block;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  position: absolute;
+  left: 50%;
+  background: #222;
+  transform: translate(-50%, 0);
+  opacity: 1;
+  border: 1px solid transparent;
+  transition: opacity 0.5s ease, transform 0.5s ease, background-color 0.5s ease, border-color 0.5s ease;
+}
+
+.tune-dot-double-ottava-alta::before {
+  top: -8%;  /* 修改这里 */
+}
+
+.tune-dot-double-ottava-alta::after {
+  top: -18%;  /* 修改这里 */
+}
+
+body.dark .tune-dot-double-ottava-alta::before,
+body.dark .tune-dot-double-ottava-alta::after {
+  background: #fdfdfd;
+}
+
+.list .bubble.hidden > div > div.tune-dot-double-ottava-alta::before,
+.list .bubble.hidden > div > div.tune-dot-double-ottava-alta::after {
+  opacity: 0;
+  transform: translate(-50%, 0) scale(0.5);
+}
+
+.list .bubble.outline > div > div.tune-dot-double-ottava-alta::before,
+.list .bubble.outline > div > div.tune-dot-double-ottava-alta::after {
+  background-color: transparent;
+  border-color: #999;
+}
+
 .accidental {
   font-family: 'Medle Icons Collection - 220309';
   font-size: 14px;
@@ -588,6 +670,30 @@ body.nota-aikin .fg > .small-bubble.solf-7 > div.content:before { content: '\f04
   transform: translate(-50%, -50%) scale(0.5);
 }
 .list .small-bubble.outline > div > div.tune-dot {
+  background-color: transparent;
+  border-color: #999;
+}
+
+.list .small-bubble.hidden > div > div.tune-dot-double-ottava-bassa::before,
+.list .small-bubble.hidden > div > div.tune-dot-double-ottava-bassa::after {
+  opacity: 0;
+  transform: translate(-50%, 0) scale(0.5);
+}
+
+.list .small-bubble.outline > div > div.tune-dot-double-ottava-bassa::before,
+.list .small-bubble.outline > div > div.tune-dot-double-ottava-bassa::after {
+  background-color: transparent;
+  border-color: #999;
+}
+
+.list .small-bubble.hidden > div > div.tune-dot-double-ottava-alta::before,
+.list .small-bubble.hidden > div > div.tune-dot-double-ottava-alta::after {
+  opacity: 0;
+  transform: translate(-50%, 0) scale(0.5);
+}
+
+.list .small-bubble.outline > div > div.tune-dot-double-ottava-alta::before,
+.list .small-bubble.outline > div > div.tune-dot-double-ottava-alta::after {
   background-color: transparent;
   border-color: #999;
 }

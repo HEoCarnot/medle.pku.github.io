@@ -205,10 +205,12 @@ const servePuzzle = async (req, puzzleId, checkToday) => {
     const noteName = note[0].toString();
     let noteValue = parseInt(noteName[0]);
     if (noteName.indexOf('-') !== -1) noteValue -= 7;
+    if (noteName.indexOf('--') !== -1) {noteValue -= 7;}
     if (noteName.indexOf('+') !== -1) noteValue += 7;
+    if (noteName.indexOf('++') !== -1) noteValue += 7;
     if (noteName.indexOf('b') !== -1) noteValue -= 0.1;
     if (noteName.indexOf('#') !== -1) noteValue += 0.1;
-    if (noteName.indexOf('*') !== -1) noteValue += 100;
+    if (noteName.indexOf('*') !== -1) noteValue += 1000;
     note[0] = noteValue;
   }
 
@@ -247,7 +249,7 @@ const servePuzzle = async (req, puzzleId, checkToday) => {
   }
   puzzleContents.i18nVars = encodeData(i18n);
 
-  const isDaily = !!puzzleId.match(/^[0-9]{3,}(EX|PH)?$/g);
+  const isDaily = !!puzzleId.match(/^[0-9]{3,}(ED|EX|PH)?$/g);
   puzzleContents.guideToToday =
     (checkToday && isDaily && parseInt(puzzleId) < parseInt(today));
   puzzleContents.isDaily = isDaily;
@@ -266,7 +268,7 @@ const servePuzzle = async (req, puzzleId, checkToday) => {
       specialPuzzleIds.push(index);
       continue;
     }
-    const isValid = !!fileName.match(/^[0-9]{3,}(EX|PH)?\.yml$/g);
+    const isValid = !!fileName.match(/^[0-9]{3,}(ED|EX|PH)?\.yml$/g);
     if (!isValid) continue;
     let decomposition = getPuzzleId(index);
     if (decomposition[0] > todaysPuzzleIndex()) continue; // should not show the future puzzles.
@@ -342,7 +344,7 @@ const request_manage = async function(req, res) {
     // Custom puzzle
     if (url.pathname.match(/^\/[A-Za-z0-9]+$/g)) {
       const puzzleId = url.pathname.substring(1);
-      if (!debug && url.pathname.match(/^\/[0-9]+(EX|PH)?$/g) && parseInt(puzzleId) > todaysPuzzleIndex())
+      if (!debug && url.pathname.match(/^\/[0-9]+(ED|EX|PH)?$/g) && parseInt(puzzleId) > todaysPuzzleIndex())
         return noSuchPuzzle();
       return servePuzzle(req, puzzleId, url.search !== '?past');
     }
@@ -398,7 +400,7 @@ const handler = async (req, res) => {
   respond_request(resp, res);
 };
 
-const port = process.env.PORT || 2222;
+const port = process.env.PORT || 12346;
 // const port = 2222;
 log(`http://localhost:${port}/`);
 
