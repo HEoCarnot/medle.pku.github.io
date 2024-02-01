@@ -1,33 +1,35 @@
 tune:
-- [1, 4.0]
-- [2, 4.0]
-- [3, 12.0]
-- [6, 15.0, -11.0]
-- [7, 8.0, 6.0, 18.0, 8.0, -24.0]
-- [1+, 12.0, -6.0]
-- [2+, 21.0]
-- [5, 3.0]
-- [2, 2.0]
-- [3, 16.0]
+  - [5, 8]
+  - [1, 2]
+  - [2, 2]
+  - [3, 2]
+  - [4, 2]
+  - [5, 4]
+  - [1+, 4]
+  - [5, 4]
+  - [4, 4]
+  - [3b, 2]
+  - [2, 2]
+  - [1, 4]
+  - [2, 2]
+  - [1, 2]
+  - [7b-, 4]
+  - [1, 16]
+  
+tuneBeatDur: 110
+tunePitchBase: C#5
+metronome: [0, 4]
 
-tuneBeatDur: 15000/157.5
-tunePitchBase: E4
-metronome: [0, 4, 2, 4]
-# [等几拍敲第一下,每过几个时间单位敲一下,开头敲几下后是重拍,每几拍一个重拍]
-
-tuneRevealBeatDur: 15000/157.5
-tuneRevealOffset: 15000/157.5*(4+8*16-8) # 括号内填写多少个时间单位后开始钢琴窗第一个音
+tuneRevealBeatDur: 15000/159
+tuneRevealOffset: 15000/159*64
 
 zh-Hans:
-  title:  Magical Storm（マジカルストーム）
-  author: ZUN
-  desc:   《东方辉针城》4面主题曲。
-# 示例：
-# title: 门前的妖怪小姑娘（門前の妖怪小娘）
-# desc:  《东方神灵庙》2面BOSS幽谷响子的主题曲。
+  title: 妖精大战争 ～ Fairy Wars（）
+  author: Zun
+  desc: 妖精大战争 主题曲。原TOUHOU Medle第10题，这里用于测试本服。
 en:
-  title:
-  author:
-  desc:
+  title: （）
+  author: Zun
+  desc: The stage  theme from .
 
-curator:
+curator: 榆木华

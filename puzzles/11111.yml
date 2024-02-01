@@ -1,0 +1,36 @@
+tune:
+  - [1, 2]
+  - [2, 2]
+  - [3, 12, 4, -8]
+  - [5, 6, 6]
+  - [7, 4]
+  - [1+, 4]
+  - [2+, 4]
+  - [1+, 6, -4]
+  - [7, 6, -4]
+  - [6, 6]
+  - [5, 4, 4, -6]
+  - [2, 8, -4]
+  - [3, 6, 2]
+  - [1, 2, 2]
+  - [7-, 4]
+
+
+tuneBeatDur: 15000/145
+tunePitchBase: A4
+metronome: [0, 4, 1, 4]
+
+tuneRevealBeatDur: 15000/145
+tuneRevealOffset: 15000/145*(16*4+0.4)
+
+zh-Hans:
+  title: 	Tabula rasa　～空白少女
+  author: Zun
+  desc: 	《东方梦时空》中，爱莲的主题曲。《【2020东方华灯宴主题曲】再宴「群游万象」》的原曲。
+
+en:
+  title: baka
+  author: Zun
+  desc: bakabaka
+
+curator: 卡诺热机之梦

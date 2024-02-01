@@ -865,8 +865,57 @@ const startGame = () => {
         r.serrated(true);
         attRows.push(r);
       }
+
+        // 修改相关元素
+      if (finished) {
+        let element, rateeee, alreadyHave, limits, tries, bonus;
+        alreadyHave = false;
+        limits = succeeded ? attInputs.length : attemptsLimit;
+        tries = succeeded ? 1 : 0;
+        rateeee = Math.random();
+        if (succeeded && attResults.length === 1) {
+          rateeee = 1000000 - 1000000 / attemptsLimit * rateeee / 8
+          bonus = 10 * Math.round(rateeee);
+        }
+        else if (succeeded) {
+          
+          rateeee = 1000000 / attemptsLimit * (rateeee-0.5) / 4 + 1000000 / attemptsLimit * (attemptsLimit - attResults.length);
+          bonus = 10 * Math.round(rateeee);
+        }
+        else
+          bonus = 'Failed';
+
+        element = document.getElementById("limits");
+        if (element) {
+          alreadyHave = true;
+          document.getElementById('limits').innerHTML = limits;
+        }
+
+        element = document.getElementById("tries");
+        if (element) {
+          alreadyHave = true;
+          document.getElementById('tries').innerHTML = tries;
+        }
+
+        element = document.getElementById("bonus");
+        if (element) {
+          alreadyHave = true;
+          document.getElementById('bonus').innerHTML = bonus;
+        }
+
+        if (!alreadyHave) {
+          // 获取元素
+          let element = document.getElementById('spell-stat');
+
+          // 修改元素的内容
+          if (element) {
+            element.innerHTML = "<sup>Bonus " + bonus +
+            " History " + tries + "/" + limits + "</sup></div>";
+          }
+        }
+      }
       
-      if (!revealSilence)
+      if (!revealSilence) {
         setTimeout(async () => {
           let currFinished = (attResults.length === attemptsLimit || succeeded);
           if (currFinished) {
@@ -914,109 +963,10 @@ const startGame = () => {
             showButtons(true);
           }
         }, (silence ? 100 + input.length * notePopSpeed : 500 + (tuneDur + metronomeOffset()) * tuneBeatDur + 1000 + Math.abs(musicOffset)));
+      }
     }).catch((xhr, status, error) => {
       console.error(error)
     })
-    attInputs.push(input);
-    attResults.push(result);
-    succeeded = result.every((r) => r === 2);
-    const finished = (attResults.length === attemptsLimit || succeeded);
-    let newRow;
-    if (!finished) {
-      newRow = r = createRow(tuneDecos, listContainer, attResults.length);
-      r.show(false);
-      r.serrated(true);
-      attRows.push(r);
-    }
-
-    // 修改相关元素
-    if (finished) {
-      let element, rateeee, alreadyHave, limits, tries, bonus;
-      alreadyHave = false;
-      limits = succeeded ? attInputs.length : attemptsLimit;
-      tries = succeeded ? 1 : 0;
-      rateeee = Math.random();
-      if (succeeded && attResults.length === 1) {
-        rateeee = 1000000 - 1000000 / attemptsLimit * rateeee / 8
-        bonus = 10 * Math.round(rateeee);
-      }
-      else if (succeeded) {
-        
-        rateeee = 1000000 / attemptsLimit * (rateeee-0.5) / 4 + 1000000 / attemptsLimit * (attemptsLimit - attResults.length);
-        bonus = 10 * Math.round(rateeee);
-      }
-      else
-        bonus = 'Failed';
-
-      element = document.getElementById("limits");
-      if (element) {
-        alreadyHave = true;
-        document.getElementById('limits').innerHTML = limits;
-      }
-
-      element = document.getElementById("tries");
-      if (element) {
-        alreadyHave = true;
-        document.getElementById('tries').innerHTML = tries;
-      }
-
-      element = document.getElementById("bonus");
-      if (element) {
-        alreadyHave = true;
-        document.getElementById('bonus').innerHTML = bonus;
-      }
-
-      if (!alreadyHave) {
-        // 获取元素
-        let element = document.getElementById('spell-stat');
-
-        // 修改元素的内容
-        if (element) {
-          element.innerHTML = "<sup>Bonus " + bonus +
-          " History " + tries + "/" + limits + "</sup></div>";
-        }
-      }
-    }
-
-    if (!revealSilence)
-      setTimeout(async () => {
-        let currFinished = (attResults.length === attemptsLimit || succeeded);
-        if (currFinished) {
-          if (haveRevealed)
-            return;
-          haveRevealed = true;
-          // Send analytics
-          let visits = [];
-          if (!silence) {
-            // sendAnalytics('fin ' + attInputs.map((a) => a.join('')).join(','));
-            visits = await sendAnalytics('fin ' + (succeeded ? attInputs.length : attemptsLimit + 1));
-            const problemStatus = (succeeded ? String(attInputs.length) : 'fail');
-            localStorage.setItem("problemStatus-" + puzzleId, problemStatus);
-            addStatistics(problemStatus);
-          }
-          else {
-            if (localStorage.getItem("problemStatus-" + puzzleId) === "0") {
-              if (!unknownStatus) {
-                // after update but havn't added into database
-                visits = await sendAnalytics('fin ' + (succeeded ? attInputs.length : attemptsLimit + 1));
-              }
-              else
-                visits = await sendAnalytics('fetch');
-              const problemStatus = (succeeded ? String(attInputs.length) : 'fail');
-              localStorage.setItem("problemStatus-" + puzzleId, problemStatus);
-              addStatistics(problemStatus);
-            }
-            else
-              visits = await sendAnalytics('fetch');
-          }
-          // Reveal answer
-          window.revealAnswer(visits);
-          showButtons(true);
-        } else {
-          for (let i = 0; i < N; i++) newRow.clear(i);
-          showButtons(true);
-        }
-      }, (silence ? 100 + input.length * notePopSpeed : 500 + (tuneDur + metronomeOffset()) * tuneBeatDur + 1000 + Math.abs(musicOffset)));
   };
 
 
@@ -1353,36 +1303,44 @@ const startGame = () => {
 
   const showNewRows = (index, silence = false, revealSilence = false) => {
 
+    attRows_outside = attRows
+
     result = history.results[index]
     input = history.guesses[index]
-
+    
     r.show(true);
+    
     const previousRow = r;
     const notePopSpeed = 20;
-    const paint = (i, time) => {
+
+    const paint = (i, time, result) => {
       setTimeout(() => {
-        if (result[i] === 0) previousRow.style(i, 'none');
-        if (result[i] === 1) previousRow.style(i, 'maybe');
-        if (result[i] === 2) previousRow.style(i, 'bingo');
-        previousRow.style(i, 'solf-' + input[i]);
+        console.log(result, index)
+        if (result[i] === 0) attRows[index].style(i, 'none');
+        if (result[i] === 1) attRows[index].style(i, 'maybe');
+        if (result[i] === 2) attRows[index].style(i, 'bingo');
+        attRows[index].style(i, 'solf-' + input[i]);
       }, time);
     }
-    for (let i = 0; i < input.length; i ++)
-      paint(i, i * notePopSpeed);
+
+    for (let i = 0; i < input.length; i++) {
+      paint(i, i * notePopSpeed, result);
+    }
 
     attInputs.push(input);
     attResults.push(result);
     succeeded = history.succeeded
     const finished = history.finished;
     const currFinished = result.every(num => num === 2)
-    let newRow;
+
     if (!currFinished) {
-      newRow = r = createRow(tuneDecos, listContainer, attResults.length);
+      r = createRow(tuneDecos, listContainer, attResults.length);
       r.show(false);
       r.serrated(true);
       attRows.push(r);
     }
-    if (!revealSilence)
+
+    if (!revealSilence) {
       setTimeout(async () => {
         if (finished) {
           if (haveRevealed)
@@ -1403,6 +1361,7 @@ const startGame = () => {
           showButtons(true);
         }
       }, (silence ? 100 + input.length * notePopSpeed : 500 + (tuneDur + metronomeOffset()) * tuneBeatDur + 1000 + Math.abs(musicOffset)));
+    }
   }
 
   // * save today's progress

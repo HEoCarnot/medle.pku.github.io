@@ -1,0 +1,49 @@
+tune:
+- [6--, 1.0]
+- [6-, 10.5, -9.5]
+- [2-, 1.0]
+- [7-, 7.0, 2.0, -8.0]
+- [3-, 4.0, -3.0]
+- [1, 1.0]
+- [4-, 1.0]
+- [2, 2.0]
+- [3, 3.5, -1.5]
+- [5, 2.0]
+- [4#, 0.5]
+- [5#, 0.5]
+- [7, 0.5]
+- [1#+, 0.5]
+- [2#+, 0.5]
+- [3#+, 0.5]
+- [2+, 30.0, -28.0]
+- [3+, 32.0, -30.0]
+- [6, 18.0, 14.0, 12.0, -40.0]
+- [7, 2.0, 28.0, 2.0, 2.0, -33.0]
+- [1+, 32.0, -29.0]
+- [5, 32.0, -30.0]
+- [2, 7.0, 25.0, -30.0]
+- [1, 4.0, -2.0]
+- [7-, 44.0]
+
+tuneBeatDur: 15000/161.92
+tunePitchBase: E5
+metronome: [0, 4, 0, 4]
+# [等几拍敲第一下,每过几个时间单位敲一下,开头敲几下后是重拍,每几拍一个重拍]
+
+tuneRevealBeatDur: 15000/161.92
+tuneRevealOffset: 18402 # 括号内填写多少个时间单位后开始钢琴窗第一个音
+
+zh-Hans:
+  title: Demystify Feast（充满神秘性的面纱的内侧：“拨云见日”的宴会）
+  author: ZUN
+  desc: "<tbody>    <tr>        <td class=\"zhdef\" width=\"50%\" style=\"padding-left:1em;\">            <div class=\"poem\">                <center><big>恐怖的回忆第3弹</big><br />                    <p>13th Touhou Project<br />                        <big>恐怖的回忆 PH</big><br />                        Terrible Souvenir PH. <br />                        <big>癸卯年腊月十二</big><br />                    </p>                    22<sup>nd</sup> January, 2024                </center>            </div>        </td>    </tr>    <br />    <tr>        <td class=\"zhdef\" width=\"50%\" style=\"padding-left:1em;\">            <div class=\"poem\">                <center><big>一切的源起</big><br />                    <p>Original<br />                        <big>上海アリス幻樂団</big><br />                        Team Shanghai Alice<br />                        <big>黄昏フロンティア</big><br />                        Twilight Frontier<br />                    </p>                    <br />                    <big>异变的主谋</big><br />                    <p>Curator<br />                        <big>卡诺，苗苗，香菇</big><br />                    </p>                    （会一直坚持下去，直到坚持不下去为止）<br />                    （当然，加入我们也是欢迎的）<br />                </center>            </div>        </td>    </tr>    <br />    <tr>        <td class=\"zhdef\" width=\"50%\" style=\"padding-left:1em;\">            <div class=\"poem\">                <center><big>同伙们</big><br />                    <p>Special Thanks<br />                        <big>Nipporita</big><br />                        Server Manager ww<br />                        <big>榆木华</big><br />                        akashiya<br />                        <big>帮忙反馈bug的诸位</big><br />                        Bug Hunter<br />                        <big>然后还有你</big><br />                        and You!<br />                        <br />                        <big>了不起！想必你已经是原曲通了！</big><br />                        不过，还是要再继续(EXTRA)一下<br />                    <p>100 Stages Clear!<br />                    </p>                    Thank you for playing! Challenge to Extra Stage! <br />                    <small>P.S. 接下来两道都是同人曲哦</small>                </center>            </div>        </td>    </tr></tbody></table>"
+# 示例：
+# title: 门前的妖怪小姑娘（門前の妖怪小娘）
+# desc:  《东方神灵庙》2面BOSS幽谷响子的主题曲。
+en:
+  title: a
+  author: b
+  desc: c
+
+
+curator: 卡诺

@@ -1,0 +1,26 @@
+tune:
+  - [1, 20, -14]
+  - [1, 20, -18]
+  - [1, 20, -16]
+  - [7-, 20, -16]
+  - [7-, 20]
+  - [5, 4]
+  - [2, 4]
+
+tuneBeatDur: 15000/187
+tunePitchBase: F#4
+metronome: [0, 4, 0, 11]
+
+tuneRevealBeatDur: 15000/187
+tuneRevealOffset: 15000/187*4*6
+
+zh-Hans:
+  title: 魔界地方都市秘境（魔界地方都市エソテリア）
+  author: Zun
+  desc: 【未在正式互动节目使用，作为观众体验题放出】东方星莲船中，5面的主题曲。
+en:
+  title: baka
+  author: Zun
+  desc: bakabaka
+
+curator: HEoCarnot
