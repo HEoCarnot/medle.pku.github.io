@@ -1315,7 +1315,6 @@ const startGame = () => {
 
     const paint = (i, time, result) => {
       setTimeout(() => {
-        console.log(result, index)
         if (result[i] === 0) attRows[index].style(i, 'none');
         if (result[i] === 1) attRows[index].style(i, 'maybe');
         if (result[i] === 2) attRows[index].style(i, 'bingo');
