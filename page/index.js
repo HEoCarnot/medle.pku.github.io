@@ -1332,8 +1332,10 @@ const startGame = () => {
     const finished = history.finished;
     const currFinished = result.every(num => num === 2)
 
+    let newRow
+
     if (!currFinished) {
-      r = createRow(tuneDecos, listContainer, attResults.length);
+      newRow = r = createRow(tuneDecos, listContainer, attResults.length);
       r.show(false);
       r.serrated(true);
       attRows.push(r);

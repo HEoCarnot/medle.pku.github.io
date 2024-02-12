@@ -65,6 +65,9 @@ body.dark {
   position: relative;
   background: white;
   padding: var(--padding-ud) var(--padding-lr);
+  /* overflow-y: scroll; */
+  /* overflow-x: hidden; */
+  /* scrollbar-width: none; */
 }
 
 #icon-btns-container {
@@ -114,6 +117,9 @@ body.dark #icon-btns-container > div:active {
 .list > div {
   width: 100%;
   display: flex;
+  justify-content: center;
+  flex-direction: row;
+  box-sizing: border-box;
 }
 .list > div.fg {
   margin-top: -56px;
@@ -126,6 +132,8 @@ body.dark #icon-btns-container > div:active {
   text-align: center;
   font-size: 22px;
   overflow: visible;
+  margin-left: -28px;
+  margin-right: -28px;
 }
 
 .list .bubble > div.content {
@@ -136,7 +144,7 @@ body.dark #icon-btns-container > div:active {
   width: 56px;
   height: 56px;
   box-sizing: border-box;
-  transform: translateX(-50%);
+  /* transform: translateX(-50%); */
   opacity: 1;
   border: 1px solid transparent;
   transition: opacity 0.5s ease, transform 0.5s ease, background 0.5s ease, border-color 0.5s ease;
@@ -147,6 +155,8 @@ body.smallscreen .list .bubble {
   height: 55px;
   line-height: 45px;
   font-size: 20px;
+  margin-left: -16px;
+  margin-right: -16px;
 }
 body.smallscreen .list .bubble > div.content {
   width: 45px;
@@ -197,7 +207,8 @@ body.highcon.dark .list > .bg > .bubble.maybe > div.content {
 .list.hidden .bubble:not(.nohidden) > div.content,
 .list.hidden.must .bubble > div.content {
   opacity: 0;
-  transform: translateX(-50%) scale(0.5);
+  /* transform: translateX(-50%) scale(0.5); */
+  transform: scale(0.5);
   pointer-events: none;
 }
 .list .bubble.outline > div.content {
@@ -205,11 +216,13 @@ body.highcon.dark .list > .bg > .bubble.maybe > div.content {
 }
 .list .bubble.outline:not(.hidden) > div.content {
   opacity: 1;
-  transform: translateX(-50%) scale(1);
+  /* transform: translateX(-50%) scale(1); */
+  transform: scale(1);
   border-color: #999;
 }
 .list .bubble.outline:not(.hidden).large > div.content {
-  transform: translateX(-50%) scale(1.2);
+  /* transform: translateX(-50%) scale(1.2); */
+  transform: scale(1.2);
   transition: opacity 0.5s ease, transform 0.15s ease, background 0.5s ease, border-color 0.5s ease;
 }
 body.dark .list .bubble.outline:not(.hidden) > div.content {
@@ -238,6 +251,7 @@ body.dark .list .bubble.outline:not(.hidden) > div.content {
 }
 .list.btn .bubble > div.content {
   transform: translateX(-50%) scale(1.2);
+  /* transform: scale(1.2); */
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
@@ -252,7 +266,8 @@ body.dark .list.btn.disabled .bubble > div.content {
   background: rgba(45, 45, 45, 80%);
 }
 .list .bubble.large > div.content {
-  transform: translateX(-50%) scale(1.2);
+  /* transform: translateX(-50%) scale(1.2); */
+  transform: scale(1.2);
 }
 .list.hidden .bubble:not(.nohidden) {
   pointer-events: none;
@@ -266,16 +281,18 @@ body.dark .list.btn.disabled .bubble > div.content {
   text-align: center;
   font-size: 18px;
   overflow: visible;
+  margin-left: -20px;
+  margin-right: -20px;
 }
 .list .small-bubble > div.content {
   background: rgba(220, 220, 220, 80%);
   border-radius: 50%;
   display: inline-block;
-  position: fixed;
+  /* position: fixed; */
   width: 40px;
   height: 40px;
   box-sizing: border-box;
-  transform: translateX(-50%);
+  /* transform: translateX(-50%); */
   opacity: 1;
   border: 1px solid transparent;
   transition: opacity 0.5s ease, transform 0.5s ease, background 0.5s ease, border-color 0.5s ease;
@@ -285,6 +302,9 @@ body.smallscreen .list .small-bubble {
   height: 55px;
   line-height: 32px;
   font-size: 14px;
+  flex-shrink: 1;
+  margin-left: -16px;
+  margin-right: -16px;
 }
 body.smallscreen .list .small-bubble > div.content {
   width: 32px;
@@ -334,7 +354,8 @@ body.highcon.dark .list > .bg > .small-bubble.maybe > div.content {
 .list.hidden .small-bubble:not(.nohidden) > div.content,
 .list.hidden.must .small-bubble > div.content {
   opacity: 0;
-  transform: translateX(-50%) scale(0.5);
+  /* transform: translateX(-50%) scale(0.5); */
+  transform: scale(0.5);
   pointer-events: none;
 }
 .list .small-bubble.outline > div.content {
@@ -342,11 +363,13 @@ body.highcon.dark .list > .bg > .small-bubble.maybe > div.content {
 }
 .list .small-bubble.outline:not(.hidden) > div.content {
   opacity: 1;
-  transform: translateX(-50%) scale(1);
+  /* transform: translateX(-50%) scale(1); */
+  transform: scale(1);
   border-color: #999;
 }
 .list .small-bubble.outline:not(.hidden).large > div.content {
-  transform: translateX(-50%) scale(1.2);
+  /* transform: translateX(-50%) scale(1.2); */
+  transform: scale(1.2);
   transition: opacity 0.5s ease, transform 0.15s ease, background 0.5s ease, border-color 0.5s ease;
 }
 body.dark .list .small-bubble.outline:not(.hidden) > div.content {
@@ -374,7 +397,8 @@ body.dark .list .small-bubble.outline:not(.hidden) > div.content {
   pointer-events: none;
 }
 .list.btn .small-bubble > div.content {
-  transform: translateX(-50%) scale(1.2);
+  /* transform: translateX(-50%) scale(1.2); */
+  transform: scale(1.2);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
@@ -389,7 +413,8 @@ body.dark .list.btn.disabled .small-bubble > div.content {
   background: rgba(45, 45, 45, 80%);
 }
 .list .small-bubble.large > div.content {
-  transform: translateX(-50%) scale(1.2);
+  /* transform: translateX(-50%) scale(1.2); */
+  transform: scale(1.2);
 }
 .list.hidden .small-bubble:not(.nohidden) {
   pointer-events: none;
@@ -471,9 +496,11 @@ body.dark .tune-dot {
 } */
 .tune-dot.ottava {
   top: -8%;
+  position: relative;
 }
 .tune-dot.ottava-bassa {
   top: 108%;
+  position: relative;
 }
 .list .bubble.hidden > div > div.tune-dot {
   opacity: 0;
@@ -569,10 +596,14 @@ body.dark .tune-dot-double-ottava-alta::after {
 .accidental {
   font-family: 'Medle Icons Collection - 220309';
   font-size: 14px;
-  position: fixed;
+  /* position: fixed; */
   left: 20%;
   top: 30%;
-  transform: rotate(5deg) translate(-50%, -50%);
+  transform: rotate(5deg) translate(-30%, -20%);
+}
+
+.tune-dot + .accidental {
+    transform: rotate(7deg) translate(-30%, -20%) translate(0px, -4px);
 }
 .accidental::before {
   content: '';
@@ -724,6 +755,10 @@ body.nota-aikin .fg > .small-bubble.solf-7 > div.content:before { content: '\f04
 
 #list-container {
   margin-top: 32px;
+  height: calc(100% - 32px - 40px);
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scrollbar-width: none;
 }
 #start-btn-container {
   position: absolute;
@@ -768,6 +803,7 @@ body.nota-aikin .fg > .small-bubble.solf-7 > div.content:before { content: '\f04
 }
 #btns-container {
   width: calc(100% - var(--padding-lr) * 2);
+  /* width: 100%; */
   position: absolute;
   bottom: 12px;
 }
@@ -780,8 +816,7 @@ body.nota-aikin .fg > .small-bubble.solf-7 > div.content:before { content: '\f04
 .list.btn.confirm {
   margin-top: -72px;
 }
-.list.btn.confirm .bubble {
-}
+.list.btn.confirm .bubble {margin-left: 0px;margin-right: 0px;}
 .list.btn.confirm .bubble > div.content {
   width: 83%; /* for the background capsule shape, this will be overridden */
   display: inline-block;
@@ -880,10 +915,12 @@ body.dark .modal .bottom-shadow {
   margin: 8px 0;
 }
 .modal .list .bubble > div {
-  transform: translateX(-50%) scale(0.7);
+  /* transform: translateX(-50%) scale(0.7); */
+  transform: scale(0.7);
 }
 .modal .list .bubble.large > div.content {
-  transform: translateX(-50%) scale(0.8);
+  /* transform: translateX(-50%) scale(0.8); */
+  transform: scale(0.8);
 }
 
 #modal-finish > p#reveal-title *:not(.iconfont),
@@ -1105,6 +1142,10 @@ body.dark *::-webkit-scrollbar-thumb{
 body.dark * {
   scrollbar-color: #555 #333;
   scrollbar-width: thin;
+}
+
+#list-container > .list:last-child {
+    margin-bottom: 60px;
 }
 
 .progress {
@@ -1380,4 +1421,14 @@ body.dark .visualizerRail.deep {
 
 #btn-stat .hidden {
   display: none;
+}
+
+@media (max-width: 768px) {
+  #medle-container {
+    height: calc(100vh - 140rem / 16 - 40px - 0.667px - 34px - 40px - 60px);
+  }
+
+  #list-container > .list:last-child {
+    margin-bottom: 120px;
+  }
 }
