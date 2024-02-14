@@ -63,7 +63,7 @@ body.dark {
   width: 100%;
   max-width: 80vh;
   position: relative;
-  background: white;
+  background: var(--uni-background-color);
   padding: var(--padding-ud) var(--padding-lr);
   /* overflow-y: scroll; */
   /* overflow-x: hidden; */
